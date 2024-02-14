@@ -1,4 +1,4 @@
-class_name KnowlegdeBase
+class_name KnowledgeBasePart
 extends Node
 
 
