@@ -1,6 +1,9 @@
-class_name Theory
-extends KnowledgeBasePart
+class_name KnowlegdeBase
+extends Node
 
+var vocabulary: Vocabulary
+var structure: Structure
+var theory: Theory
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -10,3 +13,6 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+
+func do_something() -> String:
+	return "lol"
