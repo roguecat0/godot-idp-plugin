@@ -12,12 +12,16 @@ config_version=5
 
 config/name="Godot-idp-plugin"
 run/main_scene="res://node.tscn"
-config/features=PackedStringArray("4.1", "Mobile")
+config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
 IDP="*res://addons/IDP/idp.gd"
+
+[debug]
+
+gdscript/warnings/exclude_addons=false
 
 [editor_plugins]
 

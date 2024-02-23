@@ -2,11 +2,10 @@ class_name Structure
 extends KnowledgeBaseBlock
 
 var linked_voc: String = "V"
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	block_name = "S" # Replace with function body.
+
+func _init():
+	block_name = "S" 
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func create_from_string(str_voc: String) -> void:
+	block_str = str_voc

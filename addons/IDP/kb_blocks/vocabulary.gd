@@ -23,14 +23,16 @@ vocabulary V {
 	var x in T
 	import W
 }"""
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	block_name = "V" # Replace with function body.
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func _init():
+	block_name = "V"
 	
-func parse_from_string(str_voc: String) -> void:
-	pass
+func create_from_string(str_voc: String) -> void:
+	block_str = str_voc
+	var lines = Array(block_str.split("\n")).map(func(x): return x.rstrip(" \t").lstrip(" \t"))
+	for line in lines:
+		if line.begins_with("type "):
+			print("here")
+			types.append(line)
+		elif "->" in line:
+			functions.append(line)
