@@ -15,8 +15,8 @@ structure {
 theory {
     // Set the initial values.
     !r in Row, c in Col, v in Value: initialValue(r, c, v) => cellValue(r, c) = v.
-    { // define the conditions for a horizontal and vertical egde
-        !r1,r2 in Row: !c1,c2 in Col: horizontalEdge(r1,c1,r2,c2) <- (r1 = r2 & c1 = c2+1 ).
+    { 
+	!r1,r2 in Row: !c1,c2 in Col: horizontalEdge(r1,c1,r2,c2) <- (r1 = r2 & c1 = c2+1 ).
         !r1,r2 in Row: !c1,c2 in Col: verticalEdge(r1,c1,r2,c2) <- (r1 = r2+1 & c1 = c2 ).
     }
     // state that 3 cell with 2 of the same type of edge connecting them, should have at least 1 different number
