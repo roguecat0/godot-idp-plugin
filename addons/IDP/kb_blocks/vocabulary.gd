@@ -1,8 +1,8 @@
 class_name Vocabulary
 extends KnowledgeBaseBlock
 
-var types: Array[Dictionary] = []
-var functions: Array[Dictionary] = []
+var types: Dictionary
+var functions: Dictionary
 const practice_str : String = """
 vocabulary V {
 	type T
@@ -34,6 +34,8 @@ func create_from_string(str_voc: String) -> void:
 		).map(func(line:String) -> String: return line.strip_edges())
 	for line: String in lines:
 		add_line(line)
+	print(types)
+	print(functions)
 			
 func add_line(line: String) -> int:
 	var line_stripped: String = line.strip_edges()
@@ -42,12 +44,13 @@ func add_line(line: String) -> int:
 			or line_stripped.begins_with("theory")):
 		return -1
 	elif line.begins_with("type "):
-		types.append(parse_type(line))
+		var res: Dictionary = parse_type(line)
+		types[res.type] = res.content
 		return 0
 	elif "->" in line:
-		functions += parse_function(line)
+		parse_function(line).map(func(res: Dictionary) -> void:
+			functions[res.function]=res.content)
 		return 1
-	print(line)
 	return -1
 			
 func parse_type(line: String) -> Dictionary:
@@ -75,10 +78,10 @@ func parse_to_idp() -> String:
 	return "\n".join([header,types_as_str(),functions_as_str(),footer])
 
 func types_as_str() -> String:
-	return "\n".join(types.map(func(x: Dictionary) -> String:
-		var backend: String = " := " + x.content if x.content != "" else ""
-		return "\ttype "+x.type + backend))
+	return "\n".join(types.keys().map(func(key: String) -> String:
+		var backend: String = " := " + types[key] if types[key] != "" else ""
+		return "\ttype "+key + backend))
 	
 func functions_as_str() -> String:
-	return "\n".join(functions.map(func(x: Dictionary) -> String:
-		return "\t"+x.function + ": " + x.content))
+	return "\n".join(functions.keys().map(func(key: String) -> String:
+		return "\t"+key + ": " + functions[key]))

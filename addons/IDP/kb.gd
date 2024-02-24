@@ -6,7 +6,7 @@ var structure: Structure = Structure.new()
 var theory: Theory = Theory.new()
 # TODO: figure out whether to add functionality for adding multiple of the same block type in a kb
 # TODO: figure out if and where to implement a parser class
-# TODO: change line type from Array[Dict] to Dict in structure and vocabulary
+# TODO: add general preparser to clean text beforehand
 
 func do_something() -> String:
 	return "lol"
