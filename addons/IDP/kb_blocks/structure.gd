@@ -3,6 +3,7 @@ extends KnowledgeBaseBlock
 
 var linked_voc: String = "V"
 var functions: Dictionary
+var predicates: Dictionary
 
 func _init() -> void:
 	block_name = "S" 
@@ -25,6 +26,10 @@ func add_line(line: String) -> int:
 	elif ":=" in line:
 		var res: Dictionary = split_result(line)
 		functions[res.func_name] = res.content
+		if "->" in res.content:
+			functions[res.func_name] = res.content
+		else:
+			predicates[res.func_name] = res.content
 		return 0
 	return -1
 			
@@ -38,6 +43,10 @@ func split_result(line: String) -> Dictionary:
 func functions_as_str() -> String:
 	return "\n".join(functions.keys().map(func(key: String) -> String: 
 		return "\t"+key + " := " + functions[key] + "."))
+		
+func predicates_as_str() -> String:
+	return "\n".join(predicates.keys().map(func(key: String) -> String: 
+		return "\t"+key + " := " + predicates[key] + "."))
 
 func parse_to_idp() -> String:
 	var header: String = "structure %s:%s {" % [block_name,linked_voc]

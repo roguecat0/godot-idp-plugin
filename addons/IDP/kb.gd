@@ -4,9 +4,12 @@ extends Node
 var vocabulary: Vocabulary = Vocabulary.new()
 var structure: Structure = Structure.new()
 var theory: Theory = Theory.new()
+var solutions: Array[Structure]
 # TODO: figure out whether to add functionality for adding multiple of the same block type in a kb
 # TODO: figure out if and where to implement a parser class
 # TODO: add general preparser to clean text beforehand
+# TODO: ability to represent structure content as godot structure
+# TODO: split stucture content into predicates and functions
 
 func do_something() -> String:
 	return "lol"
