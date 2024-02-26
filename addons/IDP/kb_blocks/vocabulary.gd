@@ -34,8 +34,6 @@ func create_from_string(str_voc: String) -> void:
 		).map(func(line:String) -> String: return line.strip_edges())
 	for line: String in lines:
 		add_line(line)
-	print(types)
-	print(functions)
 			
 func add_line(line: String) -> int:
 	var line_stripped: String = line.strip_edges()
@@ -85,3 +83,6 @@ func types_as_str() -> String:
 func functions_as_str() -> String:
 	return "\n".join(functions.keys().map(func(key: String) -> String:
 		return "\t"+key + ": " + functions[key]))
+		
+func _to_string() -> String:
+	return "\ttypes: " + str(types) + "\n\tfunctions: " + str(functions)+"\n"

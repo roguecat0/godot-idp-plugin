@@ -9,13 +9,24 @@ var solutions: Array[Structure]
 # TODO: figure out if and where to implement a parser class
 # TODO: add general preparser to clean text beforehand
 # TODO: ability to represent structure content as godot structure
-# TODO: split stucture content into predicates and functions
 
 func do_something() -> String:
 	return "lol"
 	
+func clean_idp_line(line: String) -> String:
+	line = line.strip_edges()
+	line = line.get_slice("//",0)
+	line = line if line.find("[") == -1 else ""
+	line = line if line.find("#!") != 0 else ""
+	return line.strip_edges()
+	
+func clean_idp_str(idp_str: String) -> Array[String]:
+	var idp_lines: Array = Array(idp_str.split("\n"))
+	return Array(idp_lines.map(clean_idp_line).filter(func(x: String)-> bool: return x!=""),TYPE_STRING,"",null)
+	
 func create_from_string(kb_str: String) -> void:
-	var lines: PackedStringArray = kb_str.split("\n")
+	var lines: Array[String] = clean_idp_str(kb_str)
+	print(lines)
 	var i: int = 0
 	var j: int = 0
 	while i < len(lines):
@@ -50,3 +61,9 @@ func add_line_to_theory(line: String) -> int:
 	
 func add_line_to_structure(line: String) -> int:
 	return structure.add_line(line)
+	
+func _to_string() -> String:
+	return ("Vocabulary:\n" + str(vocabulary) 
+		+ "Theory:\n" + str(theory) 
+		+ "Structure:\n" + str(structure)
+		+ "Solution:\n" + str(solutions.front()))

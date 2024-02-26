@@ -13,3 +13,7 @@ func parse_to_idp() -> String:
 func add_line(_line: String) -> int:
 	push_error("unimplemented abstract function, add_line")
 	return -1
+
+func _to_string() -> String:
+	push_error("unimplemented abstract function, _to_string")
+	return ""

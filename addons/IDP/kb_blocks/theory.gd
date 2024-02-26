@@ -14,9 +14,6 @@ func create_from_string(str_voc: String) -> void:
 		).map(func(line:String) -> String: return line.strip_edges())
 	for line: String in lines:
 		add_line(line)
-	formulas.map(func(x): print("'"+x+"'"))
-	print()
-	definitions.map(func(x): print(x))
 
 func add_line(line: String) -> int:
 	var line_stripped: String = line.strip_edges()
@@ -43,3 +40,6 @@ func parse_to_idp() -> String:
 	var header: String = "theory %s:%s {" % [block_name,linked_voc]
 	var footer: String = "}"
 	return "\n".join([header,definitions_as_str(),formulas_as_str(),footer])
+	
+func _to_string() -> String:
+	return "\tformulas: " + str(formulas) + "\n\tdefinitions: " + str(definitions)+"\n"

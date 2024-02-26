@@ -38,6 +38,9 @@ procedure main() {
 	var std_out: Array[String] = execute(expand_path)
 	var out: Structure = Structure.new()
 	out.create_from_string("\n".join(std_out))
+	kb.solutions = []
 	kb.solutions.append(out)
 	return kb
+	
+
 	
