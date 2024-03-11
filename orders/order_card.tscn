@@ -37,10 +37,27 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_constants/separation = 10
 
+[node name="ReferenceRect" type="ReferenceRect" parent="ColorRect/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="Deliverd" type="ColorRect" parent="ColorRect/MarginContainer/HBoxContainer/ReferenceRect"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.807843, 0.807843, 0.807843, 1)
+
 [node name="ID" type="Label" parent="ColorRect/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
 text = "Order: 1"
 horizontal_alignment = 1
 vertical_alignment = 1

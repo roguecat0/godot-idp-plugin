@@ -3,6 +3,7 @@ extends Control
 var kb: KnowlegdeBase
 @export var order_card_scene: PackedScene
 @export var order_block_scene: PackedScene
+var colors: Dictionary
 
 func _ready() -> void:
 	#TODO: add remove method for functions
@@ -14,6 +15,7 @@ func _ready() -> void:
 	
 func setup():
 	kb = IDP.create_empty_kb()
+	get_color(3)
 	var num_orderse = 3
 	var Orders := kb.add_type("Orders",Array(range(num_orderse)),IDP.INT)
 	var maxIron : Constant = kb.add_constant("maxIron",IDP.INT,5)
@@ -52,23 +54,29 @@ func update_screen() -> void:
 		var n_iron = kb.functions.ironOrder.enums[order]
 		var n_wood = kb.functions.woodOrder.enums[order]
 		var card = order_card_scene.instantiate()
-		card.setup(order,n_iron,n_wood)
+		card.setup(order,n_iron,n_wood,get_color(order))
 		card.remove.connect(remove_card)
 		%OrderCards.add_child(card)
+		if kb.solved and order in kb.solved_functions.deliveries.en:
+			card.delivered()
 		
 	%LMaxIron.text = "max iron: %d" % kb.functions.maxIron.val
 	%LMaxWood.text = "max wood: %d" % kb.functions.maxWood.val
+	%CountDeliveries.text = "Deliveries"
 	
 	if kb.solved:
+		%CountDeliveries.text = "Delivered: %d" % len(kb.solved_functions.deliveries.en)
 		for order in kb.solved_functions.deliveries.en:
 			var n_iron = kb.functions.ironOrder.enums[order]
 			var n_wood = kb.functions.woodOrder.enums[order]
 			
 			for i in n_iron:
 				var block = order_block_scene.instantiate()
+				block.color = get_color(order)
 				%IronBlocks.add_child(block)
 			for i in n_wood:
 				var block = order_block_scene.instantiate()
+				block.color = get_color(order)
 				%WoodBlocks.add_child(block)
 			
 	
@@ -120,3 +128,10 @@ func _on_add_card_pressed() -> void:
 	kb.solved = false
 	update_screen()
 	
+func get_color(id:int):
+	if colors.has(id):
+		return colors[id]
+	var rgb = randi() | 255
+	var c = Color.hex(rgb).darkened(0.2)
+	colors[id] = c
+	return c
