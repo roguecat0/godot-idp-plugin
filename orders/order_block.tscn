@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://2mgblv6m5oae"]
+
+[node name="OrderBlock" type="ColorRect" groups=["order_blocks"]]
+custom_minimum_size = Vector2(0, 35)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0862745, 0.0862745, 0.0862745, 1)
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0, 0, 0, 1)
+border_width = 3.0
+editor_only = false
