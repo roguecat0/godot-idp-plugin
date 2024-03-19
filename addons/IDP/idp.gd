@@ -54,6 +54,7 @@ procedure main() {
 """
 	var std_out: Array = get_inference_output(kb,main_block)
 	var models = kb.parse_solutions(std_out)
+	kb.solutions = models
 	kb.update_knowledge_base(models[0])
 	return kb
 	
@@ -76,6 +77,7 @@ procedure main() {
 """ % ["minimize" if minimize else "maximize",term]
 	var std_out: Array = get_inference_output(kb,main_block)
 	var models = kb.parse_solutions(std_out)
+	kb.solutions = models
 	kb.update_knowledge_base(models[0],true)
 	return kb
 

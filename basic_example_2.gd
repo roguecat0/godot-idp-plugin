@@ -17,17 +17,17 @@ func _ready() -> void:
 	# from here no new implemenations
 	for i: int in len(letters):
 		var letter: String = letters[i]
-		kb.theory.add_line("%s() ~= 0." % letter)
+		kb.add_undefined_line("%s() ~= 0." % letter,IDP.THEORY)
 		for j: int in len(letters):
 			if i <= j:
 				break
 			var letter2: String = letters[j]
-			kb.theory.add_line("%s() ~= %s()." % [letter,letter2])
+			kb.add_undefined_line("%s() ~= %s()." % [letter,letter2],IDP.THEORY)
 		if letter in even_letters:
-			kb.theory.add_line("even(%s())." % letter)
+			kb.add_undefined_line("even(%s())." % letter,IDP.THEORY)
 		else:
-			kb.theory.add_line("~even(%s())." % letter)
-	kb.theory.add_line("I() + A() + 10*A() + 10*B() = E() + 10 * D() + 100 * C().")
+			kb.add_undefined_line("~even(%s())." % letter,IDP.THEORY)
+	kb.add_undefined_line("I() + A() + 10*A() + 10*B() = E() + 10 * D() + 100 * C().",IDP.THEORY)
 	print(kb.parse_to_idp())
 	
 	
@@ -37,18 +37,18 @@ func _ready() -> void:
 	#IDP.model_expand(kb)
 	#kb.view_solutions()
 	
-	#print("Parial solution with propogated values:")
-	#IDP.propagate(kb)
-	#kb.view_solutions()
+	print("Parial solution with propogated values:")
+	IDP.propagate(kb)
+	kb.view_solutions()
 	
 	#print("Minimizion of A():")
 	#kb.add_constant("min","Real")
-	#kb.theory.add_line("A() = min().")
+	#kb.add_undefined_line("A() = min().",IDP.THEORY)
 	#IDP.minimize(kb,"min()")
 	#kb.view_solutions()
 	
 	#print("Maximization of D():")
 	#kb.add_constant("max","Real")
-	#kb.theory.add_line("D() = max().")
+	#kb.add_undefined_line("D() = max().",IDP.THEORY)
 	#IDP.maximize(kb,"max()")
 	#kb.view_solutions()

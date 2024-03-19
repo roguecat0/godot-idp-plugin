@@ -2,47 +2,49 @@ class_name KnowlegdeBase
 extends Node
 
 # TODO: figure out if and where to implement a parser class
-
-var vocabulary: Vocabulary = Vocabulary.new()
-var structure: Structure = Structure.new()
-var theory: Theory = Theory.new()
-var solutions: Array[Structure]
-var types: Dictionary: 
-	get: return vocabulary.types
-	set(val): vocabulary.types = val
+var types: Dictionary
 var functions: Dictionary = {}
 var solved_functions: Dictionary
+
+var undefined_lines: Dictionary = {IDP.THEORY:[],IDP.VOCABULARY:[],IDP.STRUCTURE:[]}
+# output respresentation
 var solvable: bool = true
 var solved: bool = false
+var solutions: Dictionary
+var positive_propogate: Dictionary
+var negative_propogate: Dictionary
 
 func _init() -> void:
-	vocabulary.functions = functions
-	structure.functions = functions
+	pass
 
 func add_type(named: String, enumeration: Array, base_type: int=IDP.IDP_UNKNOWN) -> CustomType:
 	var t = CustomType.new(named,enumeration,base_type)
-	vocabulary.types[named] = t
+	types[named] = t
 	return t
 	
-func add_function(n: String, in_types: Variant, out_type: Variant, enumerations: Dictionary = {}) -> Function:
-	var f = Function.new(n,in_types,out_type,enumerations)
-	functions[n] = f
+func add_function(named: String, in_types: Variant, out_type: Variant, interpretation: Dictionary = {null:null},default=null) -> Function:
+	var f = Function.new(named,in_types,out_type,FunctionInterpretation.new(named,interpretation,default))
+	functions[named] = f
 	return f
 	
-func add_predicate(n: String, in_types: Variant, enumerations: Array = []) -> Predicate:
-	var p = Predicate.new(n,in_types,enumerations)
-	functions[n] = p
+func add_predicate(named: String, in_types: Variant, interpretation: Array = [null]) -> Predicate:
+	var v = {null:null}
+	if interpretation != [null]:
+		v = {}
+		interpretation.map(func(k): return {k:true})
+	var p = Predicate.new(named,in_types,"Bool",FunctionInterpretation.new(named,v,null))
+	functions[named] = p
 	return p
 	
-func add_constant(n: String, out_type: Variant, val: Variant = null) -> Constant:
-	var c = Constant.new(n,out_type,val)
-	functions[n] = c
+func add_constant(named: String, out_type: Variant, val: Variant = null) -> Constant:
+	var c = Constant.new(named,[],out_type,FunctionInterpretation.new(named,{null:null},val))
+	functions[named] = c
 	return c
 
-func add_proposition(n: String, val: Variant = null) -> Proposition:
-	var p = Proposition.new(n,val)
-	functions[n] = p
-	return p
+func add_proposition(named: String, val: Variant = null) -> Proposition:
+	var c = Constant.new(named,[],"Bool",FunctionInterpretation.new(named,{null:null},val))
+	functions[named] = c
+	return c
 	
 func view_solutions():
 	solved_functions.keys().map(func(k): print(k," : ",solved_functions[k]))
@@ -56,11 +58,13 @@ func parse_solutions(out_lines: Array) -> Array:
 	var models : Array = []
 	out_lines = out_lines.filter(func(x): return ":=" in x and not x.begins_with("//"))
 	models.append(out_lines)
+	print(models[0])
 	var model_solutions = models.map(func(x): return parse_model_functions(x))
 	return model_solutions
 	
 func update_knowledge_base(solution: Dictionary,append=false):
 	solved_functions = {}
+	print(solution)
 	functions.keys().map(func(k): solved_functions[k] = functions[k].copy())
 	solution.keys().map(func(k): solved_functions[k].update(solution[k],append))
 	solved = true
@@ -69,41 +73,48 @@ func parse_model_functions(model: Array) -> Dictionary:
 	var solutions = {}
 	for line in model:
 		var res = parse_function_line(line)
-		solutions[res[0]] = res[1]
+		print(res, " ", res.named)
+		solutions[res.named] = res
 	return solutions
 	
-func parse_function_line(line: String) -> Array:
+func add_undefined_line(line: String, block: int):
+	undefined_lines[block].append(line)
+	
+func parse_function_line(line: String) -> FunctionInterpretation:
 	var parts = line.replace(" ","").split(":=")
 	var named = parts[0]
 	var content = parts[1]
-	return [named,parse_enumeration(content)]
+	content =  parse_interpretation(content)
+	if content is Dictionary:
+		return FunctionInterpretation.new(named,content,null)
+	return FunctionInterpretation.new(named,{null:null},content)
 	
 	
-func parse_enumeration(content: String) -> Variant:
+func parse_interpretation(content: String) -> Variant:
 	content = content.substr(0,len(content)-1)
 	if content.ends_with("}"):
 		content = content.substr(1,len(content)-2)
 		if "->" in content:
 			if content.begins_with("("):
-				var enums : Dictionary = {}
+				var d : Dictionary = {}
 				content = content.substr(1)
 				var tmp = Array(content.split(",(")).map(func(x):return x.split(")->"))
-				tmp.map(func(x): enums[decode_string_values(x[0])] = decode_value(x[1]))
-				return enums
+				tmp.map(func(x): d[decode_string_values(x[0])] = decode_value(x[1]))
+				return d
 			else:
-				var enums : Dictionary = {}
+				var d : Dictionary = {}
 				var tmp = Array(content.split(",")).map(func(x):return x.split("->"))
-				tmp.map(func(x): enums[decode_value(x[0])] = decode_value(x[1]))
-				return enums
+				tmp.map(func(x): d[decode_value(x[0])] = decode_value(x[1]))
+				return d
 		else:
 			if content.begins_with("("):
-				var enums : Dictionary = {}
-				Array(content.split("),")).map(func(x): enums[decode_string_values(x)] = true)
-				return enums
+				var d : Dictionary = {}
+				Array(content.split("),")).map(func(x): d[decode_string_values(x)] = true)
+				return d
 			else:
-				var enums : Dictionary = {}
-				Array(content.split(",")).map(func(x): enums[decode_value(x)] = true)
-				return enums
+				var d : Dictionary = {}
+				Array(content.split(",")).map(func(x): d[decode_value(x)] = true)
+				return d
 	return decode_value(content)
 	
 func decode_string_values(val: String) -> Array:
@@ -120,17 +131,6 @@ func decode_value(val: String) -> Variant:
 	if val.is_valid_float():
 		return float(val)
 	return val
-#func clean_idp_line(line: String) -> String:
-	#line = line.strip_edges()
-	#line = line.get_slice("//",0)
-	#line = line if line.find("[") == -1 else ""
-	#line = line if line.find("#!") != 0 else ""
-	#return line.strip_edges()
-	#
-#func clean_idp_str(idp_str: String) -> Array[String]:
-	#var idp_lines: Array = Array(idp_str.split("\n"))
-	#return Array(idp_lines.map(clean_idp_line).filter(func(x: String)-> bool: return x!=""),TYPE_STRING,"",null)
-	#
 #func create_from_string(kb_str: String) -> void:
 	#var lines: Array[String] = clean_idp_str(kb_str)
 	#print(lines)
@@ -157,20 +157,34 @@ func decode_value(val: String) -> Variant:
 			#return j
 	#return idx
 			#
-func parse_to_idp() -> String:
-	return "\n".join([vocabulary.parse_to_idp(),theory.parse_to_idp(),structure.parse_to_idp()])
+func parse_voc_to_idp() -> String:
+	var header: String = "vocabulary V {"
+	var footer: String = "}"
+	return "\n".join([header,types_as_str(),functions_voc_as_str(),
+		parse_undefined_lines(IDP.VOCABULARY),footer])
 	
-#func add_line_to_vocabulary(line: String) -> int:
-	#return vocabulary.add_line(line)
+func parse_undefined_lines(block):
+	return "\n".join(undefined_lines[block])
+
+func types_as_str() -> String:
+	return "\n".join(types.values().map(func(x): return x.to_vocabulary_line()))
 	#
-#func add_line_to_theory(line: String) -> int:
-	#return theory.add_line(line)
-	#
-#func add_line_to_structure(line: String) -> int:
-	#return structure.add_line(line)
-	#
-#func _to_string() -> String:
-	#return ("Vocabulary:\n" + str(vocabulary) 
-		#+ "Theory:\n" + str(theory) 
-		#+ "Structure:\n" + str(structure)
-		#+ "Solution:\n" + str(solutions.front()))
+func functions_voc_as_str() -> String:
+	return "\n".join(functions.values().map(func(x): return x.to_vocabulary_line()))
+
+func parse_the_to_idp() -> String:
+	var header: String = "theory T:V {"
+	var footer: String = "}"
+	return "\n".join([header,parse_undefined_lines(IDP.THEORY),footer])
+
+func parse_str_to_idp() -> String:
+	var header: String = "structure S:V {"
+	var footer: String = "}"
+	return "\n".join([header,functions_str_as_str(),
+		parse_undefined_lines(IDP.STRUCTURE),footer])
+
+func functions_str_as_str() -> String:
+	return "\n".join(functions.values().map(func(x): 
+		return x.to_structure_line()).filter(func(x): return x != ""))
+func parse_to_idp() -> String:
+	return "\n".join([parse_voc_to_idp(),parse_the_to_idp(),parse_str_to_idp()])

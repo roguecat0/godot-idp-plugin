@@ -4,31 +4,37 @@ extends Node
 var named: String
 var input_types: Variant
 var output_type: Variant
-var enums: Dictionary
+var interpretation: FunctionInterpretation
 
-func _init(n: String, in_types: Variant, 
-		out_type: Variant, enumerations: Dictionary = {}) -> void:
+func _init(named: String, input_types: Variant, 
+		output_type: Variant, interpretation: FunctionInterpretation) -> void:
 	#TODO: find a way to handel empty enumeration vs uninitialized enumeration
 	"""\
-enums should account for:
+interpretation should account for:
 initialValue := {(1, 0), (1, 1), (1, 2)}.
 lolValue := {0 -> 0, 1 -> 0, 2 -> 0}.
 lol := true.
 """
-	named = n
-	if in_types is Array:
-		input_types = in_types.map(func(x): return _parse_custom_type(x))
+	self.named = named
+	if input_types is Array:
+		self.input_types = input_types.map(func(x): return _parse_custom_type(x))
 	else:
-		input_types = [_parse_custom_type(in_types)]
-	output_type = _parse_custom_type(out_type)
-	enums = enumerations
+		self.input_types = [_parse_custom_type(input_types)]
+	self.output_type = _parse_custom_type(output_type)
+	self.interpretation = interpretation
+	
+func set_default(val):
+	interpretation.setd(val)
+	
+func unset_default():
+	interpretation.unset()
 	
 func add(key: Variant,val: Variant=true) -> void:
 	#TODO: check if same size
-	enums[key] = val
+	interpretation.add(key,val)
 	
 func remove(key: Variant) -> bool:
-	return enums.erase(key)
+	return interpretation.remove(key)
 
 func _parse_custom_type(val: Variant) -> String:
 	if val is String:
@@ -57,8 +63,8 @@ func to_vocabulary_line() -> String:
 	return "\t%s : (%s) -> %s" % [named," * ".join(input_types),output_type]
 	
 func to_structure_line() -> String:
-	if len(enums.keys()) != 0:
-		return "\t%s := {%s}." % [named,", ".join(enums.keys().map(func(x): return _parse_enum(x,enums[x])))]
+	if interpretation.interpreted:
+		return "\t%s := {%s}." % [named,", ".join(interpretation.inter_keys().map(func(x): return _parse_enum(x,interpretation.geti(x))))]
 	return ""
 	
 func _parse_enum(key: Variant, val: Variant) -> String:
@@ -72,18 +78,20 @@ func _parse_enum_input(input_enum: Variant) -> String:
 		return str(input_enum)
 	
 func copy() -> Variant:
-	if self is Predicate:
-		return Predicate.new(named,input_types.duplicate(true) if input_types is Array else input_types,enums.keys().duplicate(true))
-	else:
-		return Function.new(named,input_types.duplicate(true) if input_types is Array else input_types,output_type,enums.duplicate(true))
+	return Function.new(named,input_types.duplicate(true),output_type,interpretation.copy())
 		
 func update(val: Variant,append: bool=false):
 	if not append:
-		self.enums = val
+		interpretation = val
 		return
-	val.keys().map(func(k): self.enums[k] = val[k])
+	interpretation.mergei(val)
+	
+func get_interpretation():
+	if interpretation.interpretation == {null:null}:
+		return {}
+	return interpretation.interpretation
 
 func _to_string() -> String:
-	return "Function(name: %s, input: %s, output: %s, enums: %s)" % [
-		named,input_types,output_type,enums
+	return "Function(name: %s, input: %s, output: %s, interpretation: %s)" % [
+		named,input_types,output_type,interpretation.interpretation
 	]

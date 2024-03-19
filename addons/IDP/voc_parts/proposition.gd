@@ -1,5 +1,5 @@
 class_name Proposition
 extends Constant
 
-func _init(n: String, val: Variant = null) -> void:
-	super(n,"Bool",val)
+func copy() -> Variant:
+	return Proposition.new(named,[],output_type,interpretation)

@@ -1,23 +1,48 @@
 vocabulary V {
-	type Orders := {0, 1, 2}
-	maxIron : () -> Int
-	maxWood : () -> Int
-	numDeliveries : () -> Int
-	deliveries : (Orders) -> Bool
-	ironOrder : (Orders) -> Int
-	woodOrder : (Orders) -> Int
+	type Decimal := {0, 1, 2, 3, 4, 5, 6, 7, 8}
+	A : () -> Decimal
+	E : () -> Decimal
+	I : () -> Decimal
+	B : () -> Decimal
+	C : () -> Decimal
+	D : () -> Decimal
+	even : (Decimal) -> Bool
+
 }
 theory T:V {
-	numDeliveries() = #{o in Orders: deliveries(o)}.
-	maxIron() >= sum{{ ironOrder(o) | o in Orders: deliveries(o)}}.
-	maxWood() >= sum{{ woodOrder(o) | o in Orders: deliveries(o)}}.
+A() ~= 0.
+even(A()).
+E() ~= 0.
+E() ~= A().
+even(E()).
+I() ~= 0.
+I() ~= A().
+I() ~= E().
+even(I()).
+B() ~= 0.
+B() ~= A().
+B() ~= E().
+B() ~= I().
+~even(B()).
+C() ~= 0.
+C() ~= A().
+C() ~= E().
+C() ~= I().
+C() ~= B().
+~even(C()).
+D() ~= 0.
+D() ~= A().
+D() ~= E().
+D() ~= I().
+D() ~= B().
+D() ~= C().
+~even(D()).
+I() + A() + 10*A() + 10*B() = E() + 10 * D() + 100 * C().
 }
 structure S:V {
-	maxIron := 5.
-	maxWood := 5.
-	ironOrder := {0 -> 4, 1 -> 1, 2 -> 1}.
-	woodOrder := {0 -> 2, 1 -> 1, 2 -> 4}.
+
+
 }
 procedure main() {
-	pretty_print(maximize(T,S,term="numDeliveries()"))
+	pretty_print(Theory(T,S).propagate())
 }

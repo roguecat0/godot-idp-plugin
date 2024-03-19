@@ -6,11 +6,14 @@ vocabulary V {
 	deliveries : (Orders) -> Bool
 	ironOrder : (Orders) -> Int
 	woodOrder : (Orders) -> Int
+	yo : Orders -> Orders
 }
 theory T:V {
 	numDeliveries() = #{o in Orders: deliveries(o)}.
 	maxIron() >= sum{{ ironOrder(o) | o in Orders: deliveries(o)}}.
 	maxWood() >= sum{{ woodOrder(o) | o in Orders: deliveries(o)}}.
+	yo(0)~=4.
+	yo(1)=1.
 }
 structure S:V {
 	maxIron := 5.
@@ -19,5 +22,6 @@ structure S:V {
 	woodOrder := {0 -> 2, 1 -> 1, 2 -> 4, 3 -> 3, 4 -> 1}.
 }
 procedure main() {
-	pretty_print(maximize(T,S,term="numDeliveries()"))
+	pretty_print(model_propagate(T,complete=True))
+	pretty_print(Theory(T,S).propagate(complete=True))
 }
