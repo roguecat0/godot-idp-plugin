@@ -58,13 +58,11 @@ func parse_solutions(out_lines: Array) -> Array:
 	var models : Array = []
 	out_lines = out_lines.filter(func(x): return ":=" in x and not x.begins_with("//"))
 	models.append(out_lines)
-	print(models[0])
 	var model_solutions = models.map(func(x): return parse_model_functions(x))
 	return model_solutions
 	
 func update_knowledge_base(solution: Dictionary,append=false):
 	solved_functions = {}
-	print(solution)
 	functions.keys().map(func(k): solved_functions[k] = functions[k].copy())
 	solution.keys().map(func(k): solved_functions[k].update(solution[k],append))
 	solved = true

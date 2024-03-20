@@ -13,10 +13,14 @@ var value: Variant:
 		return interpretation
 
 var interpreted: bool:
-	get: return interpretation == {null:null} and default == null
+	get: return interpretation != {null:null} or default != null
 var is_constant: bool:
 	get: return interpretation == {null:null} and default != null
-
+var function_with_default: bool:
+	get: return interpretation != {null:null} and default != null
+	
+	
+	
 func _init(named,interpretation,default) -> void:
 	self.named = named
 	self.interpretation = interpretation

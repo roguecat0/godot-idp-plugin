@@ -63,8 +63,15 @@ func to_vocabulary_line() -> String:
 	return "\t%s : (%s) -> %s" % [named," * ".join(input_types),output_type]
 	
 func to_structure_line() -> String:
+	var s: = ""
+	#print("named: %s, interpreded: %s, with defaults: %s" % [
+		#named, str(interpretation.interpreted), str(interpretation.function_with_default)])
+	if interpretation.function_with_default:
+		s = " else " + str(interpretation.getd())
 	if interpretation.interpreted:
-		return "\t%s := {%s}." % [named,", ".join(interpretation.inter_keys().map(func(x): return _parse_enum(x,interpretation.geti(x))))]
+		return "\t%s := {%s}%s." % [named,
+			", ".join(interpretation.inter_keys().map(func(x): 
+				return _parse_enum(x,interpretation.geti(x)))),s]
 	return ""
 	
 func _parse_enum(key: Variant, val: Variant) -> String:
@@ -82,7 +89,9 @@ func copy() -> Variant:
 		
 func update(val: Variant,append: bool=false):
 	if not append:
+		var d = interpretation.getd()
 		interpretation = val
+		interpretation.setd(d)
 		return
 	interpretation.mergei(val)
 	

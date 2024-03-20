@@ -13,6 +13,7 @@ func _ready() -> void:
 	var odd_functions: Array = odd_letters.map(func(letter):
 		return kb.add_constant(letter,Decimal))
 	var even: Predicate = kb.add_predicate("even",Decimal,[0,2,4,6,8])
+	var rand_func: Function = kb.add_function("rand_func",Decimal,Decimal,{1:1,2:2},3)
 	
 	# from here no new implemenations
 	for i: int in len(letters):

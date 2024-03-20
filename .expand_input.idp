@@ -7,6 +7,7 @@ vocabulary V {
 	C : () -> Decimal
 	D : () -> Decimal
 	even : (Decimal) -> Bool
+	rand_func : (Decimal) -> Decimal
 
 }
 theory T:V {
@@ -40,7 +41,8 @@ D() ~= C().
 I() + A() + 10*A() + 10*B() = E() + 10 * D() + 100 * C().
 }
 structure S:V {
-
+	even := {}.
+	rand_func := {1 -> 1, 2 -> 2} else 3.
 
 }
 procedure main() {

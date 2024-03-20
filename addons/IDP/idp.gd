@@ -31,6 +31,7 @@ func create_empty_kb() -> KnowlegdeBase:
 	
 func get_inference_output(kb: KnowlegdeBase,main_block:String) -> Array:
 	var kb_str: String = kb.parse_to_idp()+main_block
+	print(kb_str)
 	var expand_path : String = ".expand_input.idp"
 	_save(expand_path,kb_str)
 	var std_out: Array = execute(expand_path)
@@ -65,6 +66,7 @@ procedure main() {
 }
 """
 	var std_out: Array = get_inference_output(kb,main_block)
+	std_out
 	var models = kb.parse_solutions(std_out)
 	kb.update_knowledge_base(models[0])
 	return kb
