@@ -2,6 +2,11 @@ extends Node
 
 enum {INT,BOOL,REAL,DATE, UNKNOWN}
 enum {THEORY,VOCABULARY,STRUCTURE}
+enum {ADD,SUB,MUL,DIV,NEG,
+	LT,LTE,GT,GTE,EQ,NEQ,
+	AND,OR,NOT,IMPL,RIMPL,EQV,DFN,
+	BASE,PARENTH,CALL
+} 
 
 func _save(path: String,content: String) -> void:
 	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
@@ -54,9 +59,9 @@ procedure main() {
 }
 """
 	var std_out: Array = get_inference_output(kb,main_block)
-	var models = kb.parse_solutions(std_out)
+	var models: Array = kb.parse_solutions(std_out)
 	kb.solutions = models
-	kb.update_knowledge_base(models[0])
+	kb.solved = true
 	return kb
 	
 func propagate(kb: KnowlegdeBase) -> KnowlegdeBase:
@@ -66,21 +71,21 @@ procedure main() {
 }
 """
 	var std_out: Array = get_inference_output(kb,main_block)
-	std_out
 	var models = kb.parse_solutions(std_out)
-	kb.update_knowledge_base(models[0])
+	kb.solutions = models
+	kb.solved = true
 	return kb
 
-func optimize(kb: KnowlegdeBase,term:String,minimize: bool) -> KnowlegdeBase:
+func optimize(kb: KnowlegdeBase,term:String,is_minimize: bool) -> KnowlegdeBase:
 	var main_block: String = """
 procedure main() {
 	pretty_print(%s(T,S,term="%s"))
 }
-""" % ["minimize" if minimize else "maximize",term]
+""" % ["minimize" if is_minimize else "maximize",term]
 	var std_out: Array = get_inference_output(kb,main_block)
 	var models = kb.parse_solutions(std_out)
 	kb.solutions = models
-	kb.update_knowledge_base(models[0],true)
+	kb.solved = true
 	return kb
 
 func minimize(kb: KnowlegdeBase,term: String) -> KnowlegdeBase:
@@ -88,3 +93,27 @@ func minimize(kb: KnowlegdeBase,term: String) -> KnowlegdeBase:
 
 func maximize(kb: KnowlegdeBase,term: String) -> KnowlegdeBase:
 	return optimize(kb,term,false)
+
+func _parenth(term: Term):
+	return term._parenth()
+
+func _neg(term: Term):
+	if term is ArithTerm:
+		return term._neg()
+	push_error("trying to negate a non-arithmatic term")
+	return Term.new_base("is not and ArithTerm")
+
+func _not(term: Term):
+	if term is Bool:
+		return term._not()
+	push_error("trying to 'not' a non-boolean term")
+	return Term.new_base("is not and ArithTerm")
+
+func _p_neg(term: Term):
+	return term._parenth()._neg()
+
+func _p_not(term: Term):
+	return term._parenth()._not()
+
+	
+		

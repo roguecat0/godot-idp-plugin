@@ -1,16 +1,17 @@
 class_name KnowlegdeBase
 extends Node
 
-# TODO: figure out if and where to implement a parser class
 var types: Dictionary
 var functions: Dictionary = {}
 var solved_functions: Dictionary
+
+var formulas: Array
 
 var undefined_lines: Dictionary = {IDP.THEORY:[],IDP.VOCABULARY:[],IDP.STRUCTURE:[]}
 # output respresentation
 var solvable: bool = true
 var solved: bool = false
-var solutions: Dictionary
+var solutions: Array
 var positive_propogate: Dictionary
 var negative_propogate: Dictionary
 
@@ -21,9 +22,28 @@ func add_type(named: String, enumeration: Array, base_type: int=IDP.IDP_UNKNOWN)
 	var t = CustomType.new(named,enumeration,base_type)
 	types[named] = t
 	return t
+
+func _get_base_type(custom_type: Variant):
+	if custom_type is int:
+		return custom_type
+	if custom_type is String:
+		match custom_type:
+			"Bool":
+				return IDP.BOOL
+			"Int":
+				return IDP.INT
+			"Real":
+				return IDP.REAL
+			"Date":
+				return IDP.DATE
+			_:
+				custom_type = types.get(custom_type)
+	return custom_type.base_type
+	
 	
 func add_function(named: String, in_types: Variant, out_type: Variant, interpretation: Dictionary = {null:null},default=null) -> Function:
 	var f = Function.new(named,in_types,out_type,FunctionInterpretation.new(named,interpretation,default))
+	f.output_base_type = _get_base_type(out_type)
 	functions[named] = f
 	return f
 	
@@ -31,20 +51,33 @@ func add_predicate(named: String, in_types: Variant, interpretation: Array = [nu
 	var v = {null:null}
 	if interpretation != [null]:
 		v = {}
-		interpretation.map(func(k): return {k:true})
+		interpretation.map(func(k): v[k]=true)
 	var p = Predicate.new(named,in_types,"Bool",FunctionInterpretation.new(named,v,null))
+	p.output_base_type = IDP.BOOL
 	functions[named] = p
 	return p
 	
 func add_constant(named: String, out_type: Variant, val: Variant = null) -> Constant:
 	var c = Constant.new(named,[],out_type,FunctionInterpretation.new(named,{null:null},val))
+	c.output_base_type = _get_base_type(out_type)
 	functions[named] = c
 	return c
 
 func add_proposition(named: String, val: Variant = null) -> Proposition:
-	var c = Constant.new(named,[],"Bool",FunctionInterpretation.new(named,{null:null},val))
+	var c = Proposition.new(named,[],"Bool",FunctionInterpretation.new(named,{null:null},val))
+	c.output_base_type = IDP.BOOL
 	functions[named] = c
 	return c
+
+func add_term(term: Term):
+	print("idx: " +str(len(formulas))+", val: "+term.parse_to_idp())
+	formulas.append(term)
+	return term
+
+func add_definition(terms: Array=[]):
+	var d = Definition.new(terms)
+	formulas.append(d)
+	return d
 	
 func view_solutions():
 	solved_functions.keys().map(func(k): print(k," : ",solved_functions[k]))
@@ -61,19 +94,16 @@ func parse_solutions(out_lines: Array) -> Array:
 	var model_solutions = models.map(func(x): return parse_model_functions(x))
 	return model_solutions
 	
-func update_knowledge_base(solution: Dictionary,append=false):
-	solved_functions = {}
-	functions.keys().map(func(k): solved_functions[k] = functions[k].copy())
-	solution.keys().map(func(k): solved_functions[k].update(solution[k],append))
-	solved = true
+func update_kb_with_solution(solution: Dictionary):
+	solution.keys().map(func(k): functions[k].interpretation = solution[k])
 	
 func parse_model_functions(model: Array) -> Dictionary:
-	var solutions = {}
+	var model_solutions = {}
 	for line in model:
 		var res = parse_function_line(line)
 		print(res, " ", res.named)
-		solutions[res.named] = res
-	return solutions
+		model_solutions[res.named] = res
+	return model_solutions
 	
 func add_undefined_line(line: String, block: int):
 	undefined_lines[block].append(line)
@@ -160,7 +190,7 @@ func parse_voc_to_idp() -> String:
 	var footer: String = "}"
 	return "\n".join([header,types_as_str(),functions_voc_as_str(),
 		parse_undefined_lines(IDP.VOCABULARY),footer])
-	
+
 func parse_undefined_lines(block):
 	return "\n".join(undefined_lines[block])
 
@@ -173,7 +203,14 @@ func functions_voc_as_str() -> String:
 func parse_the_to_idp() -> String:
 	var header: String = "theory T:V {"
 	var footer: String = "}"
-	return "\n".join([header,parse_undefined_lines(IDP.THEORY),footer])
+	return "\n".join([header,
+		parse_form_to_idp(),
+		parse_undefined_lines(IDP.THEORY),footer])
+
+func parse_form_to_idp() -> String:
+	return "\t" + "\n\t".join(formulas.map(
+		func(form): return form.parse_to_idp() + ("." if form is Term else "")
+))
 
 func parse_str_to_idp() -> String:
 	var header: String = "structure S:V {"

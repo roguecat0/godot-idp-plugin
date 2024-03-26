@@ -5,6 +5,7 @@ var named: String
 var input_types: Variant
 var output_type: Variant
 var interpretation: FunctionInterpretation
+var output_base_type: int = -1
 
 func _init(named: String, input_types: Variant, 
 		output_type: Variant, interpretation: FunctionInterpretation) -> void:
@@ -52,11 +53,11 @@ func _parse_custom_type(val: Variant) -> String:
 			IDP.DATE:
 				return "Date"
 			_:
-				push_error("%d doens't have a valid connected to it. 'Real' type chosen")
+				assert(false,"%d doens't have a valid connected to it. 'Real' type chosen")
 				return "Real"
 			
 	else:
-		push_error("value is not a String or CustomType")
+		assert(false,"value is not a String, int or CustomType")
 		return ""
 
 func to_vocabulary_line() -> String:
@@ -104,3 +105,40 @@ func _to_string() -> String:
 	return "Function(name: %s, input: %s, output: %s, interpretation: %s)" % [
 		named,input_types,output_type,interpretation.interpretation
 	]
+
+func to_term(inputs: Array=[]):
+	if not self is Constant and len(inputs) == 0:
+		assert(false,"converion of non constant function to term without argumenst")
+		return
+	if len(inputs) != len(input_types):
+		assert(false,"number of arguments of function does not match number of input types")
+		return
+	if output_base_type == -1:
+		assert(false,"function has no output_base_type assigned, default of 'Real' assumend")
+		output_base_type = IDP.REAL
+	var terms = []
+	for term in inputs:
+		if term is int or term is float:
+			terms.append(ArithTerm.new_base(term))
+		elif term is bool:
+			terms.append(Bool.new_base(term))
+		elif term is Term:
+			terms.append(term)
+		else:
+			terms.append(Term.new_base(term))
+
+	match output_base_type:
+		IDP.REAL:
+			return Real.new(named,terms,IDP.CALL)
+		IDP.INT:
+			return Integer.new(named,terms,IDP.CALL)
+		IDP.BOOL:
+			return Bool.new(named,terms,IDP.CALL)
+		_:
+			return Term.new(named,terms,IDP.CALL)
+
+
+
+
+
+
