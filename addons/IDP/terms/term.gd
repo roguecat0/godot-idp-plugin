@@ -73,6 +73,18 @@ func parse_to_idp()-> String:
 		IDP.CALL:
 			return "%s(%s)" % [base,", ".join(children.map(func(child): return child.parse_to_idp()))]
 
+		# foreach
+		IDP.EACH:
+			return "%s in %s: %s" % [children[0],children[1],children[2].parse_to_idp()]
+		IDP.COUNT:
+			return "#{ %s }" % children[0]
+		IDP.SUM:
+			return "sum{{ %S | %s }}" % [children[0],children[1]]
+		IDP.MIN:
+			return "min{ %S | %s }" % [children[0],children[1]]
+		IDP.MAX:
+			return "max{ %S | %s }" % [children[0],children[1]]
+
 	assert(false,"unimplemented")
 	return ""
 
@@ -101,6 +113,7 @@ func _neq(other: Variant) -> Bool:
 		return Bool.new("",[self,other],IDP.NEQ)
 	assert(false,"types did not match")
 	return Bool.new_base("not matching arguments whre not matching types")
+
 		
 
 func is_matching_type(other) -> bool:

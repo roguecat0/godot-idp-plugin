@@ -1,5 +1,5 @@
 vocabulary V {
-	type Decimal := {0, 1, 2, 3, 4, 5, 6, 7, 8}
+	type Decimal := {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 	A : () -> Decimal
 	E : () -> Decimal
 	I : () -> Decimal
@@ -7,44 +7,45 @@ vocabulary V {
 	C : () -> Decimal
 	D : () -> Decimal
 	even : (Decimal) -> Bool
-	rand_func : (Decimal) -> Decimal
+	min : () -> Real
 
 }
 theory T:V {
-A() ~= 0.
-even(A()).
-E() ~= 0.
-E() ~= A().
-even(E()).
-I() ~= 0.
-I() ~= A().
-I() ~= E().
-even(I()).
-B() ~= 0.
-B() ~= A().
-B() ~= E().
-B() ~= I().
-~even(B()).
-C() ~= 0.
-C() ~= A().
-C() ~= E().
-C() ~= I().
-C() ~= B().
-~even(C()).
-D() ~= 0.
-D() ~= A().
-D() ~= E().
-D() ~= I().
-D() ~= B().
-D() ~= C().
-~even(D()).
-I() + A() + 10*A() + 10*B() = E() + 10 * D() + 100 * C().
+	A() ~= 0.
+	even(A()).
+	E() ~= 0.
+	E() ~= A().
+	even(E()).
+	I() ~= 0.
+	I() ~= A().
+	I() ~= E().
+	even(I()).
+	B() ~= 0.
+	B() ~= A().
+	B() ~= E().
+	B() ~= I().
+	~even(B()).
+	C() ~= 0.
+	C() ~= A().
+	C() ~= E().
+	C() ~= I().
+	C() ~= B().
+	~even(C()).
+	D() ~= 0.
+	D() ~= A().
+	D() ~= E().
+	D() ~= I().
+	D() ~= B().
+	D() ~= C().
+	~even(D()).
+	I() + A() + A() * 10 + B() * 10 = E() + D() * 10 + C() * 100.
+	A() = min().
+A() = min().
 }
 structure S:V {
-	even := {}.
-	rand_func := {1 -> 1, 2 -> 2} else 3.
+	even := {0, 2, 4, 6, 8}.
 
 }
 procedure main() {
-	pretty_print(Theory(T,S).propagate())
+	pretty_print(minimize(T,S,term="min()"))
 }
