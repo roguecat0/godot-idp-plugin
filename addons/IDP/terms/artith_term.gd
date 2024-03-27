@@ -5,12 +5,16 @@ static func new_base(base_a) -> ArithTerm:
 	return ArithTerm.new(
 		str(base_a),[],IDP.BASE
 	)
+static func create(base_a) -> ArithTerm:
+	return ArithTerm.new(
+		str(base_a),[],IDP.BASE
+	)
 
 ### arithmatic ###
 func _generic_arith(other,op_type) -> ArithTerm:
 	if other is ArithTerm:
 		return ArithTerm.new("",[self,other],op_type)
-	if other is int or other is float:
+	if other is int or other is float or other is String:
 		var b = ArithTerm.new_base(other)
 		return ArithTerm.new("",[self,b],op_type)
 	assert(false,"input %s is not correct type (ArithTerm, int, float)" % str(other))
@@ -32,7 +36,7 @@ func _div(other) -> ArithTerm:
 func _generic_comp(other,op_type) -> Bool:
 	if other is ArithTerm:
 		return Bool.new("",[self,other],op_type)
-	if other is int or other is float:
+	if other is int or other is float or other is String:
 		var b = ArithTerm.new_base(other)
 		return Bool.new("",[self,b],op_type)
 	assert(false,"input %s is not correct type (ArithTerm, int, float)" % str(other))

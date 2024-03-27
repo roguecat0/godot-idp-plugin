@@ -5,7 +5,7 @@ enum {THEORY,VOCABULARY,STRUCTURE}
 enum {ADD,SUB,MUL,DIV,NEG,
 	LT,LTE,GT,GTE,EQ,NEQ,
 	AND,OR,NOT,IMPL,RIMPL,EQV,DFN,
-	All,ANY,EACH,COUNT,SUM,MIN,MAX,
+	EACH,COUNT,SUM,MIN,MAX,ALL,ANY,
 	BASE,PARENTH,CALL
 } 
 
@@ -117,30 +117,30 @@ func _p_not(term: Term):
 	return term._parenth()._not()
 
 	
-func _all(variable:Variant, type:Variant, term: Bool) -> Bool:
-	return Bool.new("",[_foreach(variable,type,term)],IDP.ALL)
-
-func _any(variable:Variant, type:Variant, term: Bool) -> Bool:
-	return Bool.new("",[_foreach(variable,type,term)],IDP.ANY)
-
-func _count(variable:Variant, type:Variant, term: Bool) -> Integer:
-	return Integer.new("",[_foreach(variable,type,term)],IDP.COUNT)
-
-func _sum(val: Term, each: Term):
-	return ArithTerm.new("",[val,each],IDP.SUM)
-
-func _min(val: Term, each: Term):
-	return ArithTerm.new("",[val,each],IDP.MIN)
-
-func _max(val: Term, each: Term):
-	return ArithTerm.new("",[val,each],IDP.MAX)
-
-func _foreach(variable:Variant, type:Variant, term: Bool) -> Term:
-	if variable is Array:
-		variable = ", ".join(variable)
-	if not variable is String:
-		assert(false, "variable was not a string or array of strings")
-	if type is CustomType:
-		type = type.named
-	return Term.new("",[variable,type,term],IDP.EACH)
-		
+# func _all(variable:Variant, type:Variant, term: Bool) -> Bool:
+# 	return Bool.new("",[_foreach(variable,type,term)],IDP.ALL)
+#
+# func _any(variable:Variant, type:Variant, term: Bool) -> Bool:
+# 	return Bool.new("",[_foreach(variable,type,term)],IDP.ANY)
+#
+# func _count(variable:Variant, type:Variant, term: Bool) -> Integer:
+# 	return Integer.new("",[_foreach(variable,type,term)],IDP.COUNT)
+#
+# func _sum(val: Term, each: Term):
+# 	return ArithTerm.new("",[val,each],IDP.SUM)
+#
+# func _min(val: Term, each: Term):
+# 	return ArithTerm.new("",[val,each],IDP.MIN)
+#
+# func _max(val: Term, each: Term):
+# 	return ArithTerm.new("",[val,each],IDP.MAX)
+#
+# func _foreach(variable:Variant, type:Variant, term: Bool) -> Term:
+# 	if variable is Array:
+# 		variable = ", ".join(variable)
+# 	if not variable is String:
+# 		assert(false, "variable was not a string or array of strings")
+# 	if type is CustomType:
+# 		type = type.named
+# 	return Term.new("",[variable,type,term],IDP.EACH)
+# 		

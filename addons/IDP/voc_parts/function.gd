@@ -9,13 +9,6 @@ var output_base_type: int = -1
 
 func _init(named: String, input_types: Variant, 
 		output_type: Variant, interpretation: FunctionInterpretation) -> void:
-	#TODO: find a way to handel empty enumeration vs uninitialized enumeration
-	"""\
-interpretation should account for:
-initialValue := {(1, 0), (1, 1), (1, 2)}.
-lolValue := {0 -> 0, 1 -> 0, 2 -> 0}.
-lol := true.
-"""
 	self.named = named
 	if input_types is Array:
 		self.input_types = input_types.map(func(x): return _parse_custom_type(x))

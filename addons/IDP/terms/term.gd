@@ -18,6 +18,11 @@ static func new_base(base_a) -> Term:
 		str(base_a),[],IDP.BASE
 	)
 
+# static func create(base_a) -> Term:
+# 	return Term.new(
+# 		str(base_a),[],IDP.BASE
+# 	)
+
 func _parenth():
 	return self.get_type().new("",[self],IDP.PARENTH)
 
@@ -77,13 +82,17 @@ func parse_to_idp()-> String:
 		IDP.EACH:
 			return "%s in %s: %s" % [children[0],children[1],children[2].parse_to_idp()]
 		IDP.COUNT:
-			return "#{ %s }" % children[0]
+			return "#{ %s }" % children[0].parse_to_idp()
 		IDP.SUM:
-			return "sum{{ %S | %s }}" % [children[0],children[1]]
+			return "sum{{ %s | %s }}" % [children[0].parse_to_idp(),children[1].parse_to_idp()]
 		IDP.MIN:
-			return "min{ %S | %s }" % [children[0],children[1]]
+			return "min{ %s | %s }" % [children[0].parse_to_idp(),children[1].parse_to_idp()]
 		IDP.MAX:
-			return "max{ %S | %s }" % [children[0],children[1]]
+			return "max{ %s | %s }" % [children[0].parse_to_idp(),children[1].parse_to_idp()]
+		IDP.ALL:
+			return "!%s" % children[0].parse_to_idp()
+		IDP.ANY:
+			return "?%s" % children[0].parse_to_idp()
 
 	assert(false,"unimplemented")
 	return ""
@@ -95,10 +104,11 @@ func _eq(other: Variant) -> Bool:
 		other = Real.new_base(other)
 	if other is bool:
 		other = Bool.new_base(other)
+	if other is String:
+		other = get_type().new_base(other)
 	if is_matching_type(other):
 		print("doesnt break")
 		return Bool.new("",[self,other],IDP.EQ)
-	print("broken")
 	assert(false,"types did not match")
 	return Bool.new_base("not matching arguments whre not matching types")
 
@@ -109,6 +119,8 @@ func _neq(other: Variant) -> Bool:
 		other = Real.new_base(other)
 	if other is bool:
 		other = Bool.new_base(other)
+	if other is String:
+		other = get_type().new_base(other)
 	if is_matching_type(other):
 		return Bool.new("",[self,other],IDP.NEQ)
 	assert(false,"types did not match")
