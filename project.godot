@@ -22,6 +22,7 @@ IDP="*res://addons/IDP/idp.gd"
 [debug]
 
 gdscript/warnings/exclude_addons=false
+gdscript/warnings/shadowed_variable=0
 
 [editor_plugins]
 

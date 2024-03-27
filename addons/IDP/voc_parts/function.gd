@@ -94,12 +94,22 @@ func get_interpretation():
 		return {}
 	return interpretation.interpretation
 
+func get_value(key):
+	if interpretation.interpretation == {null:null}:
+		return null
+	return interpretation.interpretation.get(key)
+
+func has_value(key):
+	return interpretation.interpretation.has(key)
+
 func _to_string() -> String:
 	return "Function(name: %s, input: %s, output: %s, interpretation: %s)" % [
 		named,input_types,output_type,interpretation.interpretation
 	]
 
-func to_term(inputs: Array=[]):
+func to_term(inputs: Variant=[]):
+	if inputs is String:
+		inputs = [inputs]
 	if not self is Constant and len(inputs) == 0:
 		assert(false,"converion of non constant function to term without argumenst")
 		return

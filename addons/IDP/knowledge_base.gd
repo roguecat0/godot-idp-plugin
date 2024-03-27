@@ -3,8 +3,6 @@ extends Node
 
 var types: Dictionary
 var functions: Dictionary = {}
-var solved_functions: Dictionary
-
 var formulas: Array
 
 var undefined_lines: Dictionary = {IDP.THEORY:[],IDP.VOCABULARY:[],IDP.STRUCTURE:[]}
@@ -78,9 +76,6 @@ func add_definition(terms: Array=[]):
 	var d = Definition.new(terms)
 	formulas.append(d)
 	return d
-	
-func view_solutions():
-	solved_functions.keys().map(func(k): print(k," : ",solved_functions[k]))
 	
 func parse_solutions(out_lines: Array) -> Array:
 	#TODO: fix bug, adds an empty string to predicates when nothing to add

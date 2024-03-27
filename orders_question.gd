@@ -32,14 +32,17 @@ func setup():
 		woodOrder.add(i,req_wood[i])
 		
 	# rules
-	kb.theory.add_line("numDeliveries() = #{o in Orders: deliveries(o)}.")
-	kb.theory.add_line("maxIron() >= sum{{ ironOrder(o) | o in Orders: deliveries(o)}}.")
-	kb.theory.add_line("maxWood() >= sum{{ woodOrder(o) | o in Orders: deliveries(o)}}.")
+	# kb.add_undefined_line("numDeliveries() = #{o in Orders: deliveries(o)}.",IDP.THEORY)
+	var each_deliveries = ForEach.create("o",Orders,deliveries.to_term("o"))
+	kb.add_term(numDeliveries.to_term()._eq(each_deliveries._count()))
+	kb.add_term(maxIron.to_term()._gte(each_deliveries._sum(ironOrder.to_term("o"))))
+	kb.add_term(maxWood.to_term()._gte(each_deliveries._sum(woodOrder.to_term("o"))))
+	# kb.add_undefined_line("maxIron() >= sum{{ ironOrder(o) | o in Orders: deliveries(o)}}.",IDP.THEORY)
+	# kb.add_undefined_line("maxWood() >= sum{{ woodOrder(o) | o in Orders: deliveries(o)}}.",IDP.THEORY)
 	
 	
 func solve():
 	IDP.maximize(kb,"numDeliveries()")
-	kb.view_solutions()
 
 
 func _on_solve_b_pressed() -> void:
@@ -51,24 +54,24 @@ func update_screen() -> void:
 	get_tree().call_group("order_blocks","queue_free")
 	
 	for order in kb.types.Orders.enums:
-		var n_iron = kb.functions.ironOrder.enums[order]
-		var n_wood = kb.functions.woodOrder.enums[order]
+		var n_iron = kb.functions.ironOrder.get_value(order)
+		var n_wood = kb.functions.woodOrder.get_value(order)
 		var card = order_card_scene.instantiate()
 		card.setup(order,n_iron,n_wood,get_color(order))
 		card.remove.connect(remove_card)
 		%OrderCards.add_child(card)
-		if kb.solved and order in kb.solved_functions.deliveries.en:
+		if kb.solved and kb.solutions[0].deliveries.has(order):
 			card.delivered()
 		
-	%LMaxIron.text = "max iron: %d" % kb.functions.maxIron.val
-	%LMaxWood.text = "max wood: %d" % kb.functions.maxWood.val
+	%LMaxIron.text = "max iron: %d" % kb.functions.maxIron.get_value()
+	%LMaxWood.text = "max wood: %d" % kb.functions.maxWood.get_value()
 	%CountDeliveries.text = "Deliveries"
 	
 	if kb.solved:
-		%CountDeliveries.text = "Delivered: %d" % len(kb.solved_functions.deliveries.en)
-		for order in kb.solved_functions.deliveries.en:
-			var n_iron = kb.functions.ironOrder.enums[order]
-			var n_wood = kb.functions.woodOrder.enums[order]
+		%CountDeliveries.text = "Delivered: %d" % len(kb.solutions[0].deliveries.inter_keys())
+		for order in kb.solutions[0].deliveries.inter_keys():
+			var n_iron = kb.functions.ironOrder.get_value(order)
+			var n_wood = kb.functions.woodOrder.get_value(order)
 			
 			for i in n_iron:
 				var block = order_block_scene.instantiate()
@@ -100,7 +103,7 @@ func _on_set_max_iron_pressed() -> void:
 	if not %InMaxIron.text.is_valid_int():
 		print("not an integer")
 		return
-	kb.functions.maxIron.set_val(int(%InMaxIron.text))
+	kb.functions.maxIron.set_value(int(%InMaxIron.text))
 	kb.solved = false
 	update_screen()
 
@@ -109,7 +112,7 @@ func _on_set_max_wood_pressed() -> void:
 	if not %InMaxWood.text.is_valid_int():
 		print("not an integer")
 		return
-	kb.functions.maxWood.set_val(int(%InMaxWood.text))
+	kb.functions.maxWood.set_value(int(%InMaxWood.text))
 	kb.solved = false
 	update_screen()
 

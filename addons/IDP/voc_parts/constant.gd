@@ -1,14 +1,17 @@
 class_name Constant
 extends Function
 
-func add(key: Variant,val: Variant=true) -> void:
+func add(_key: Variant,_val: Variant=true) -> void:
 	push_error("can't add to constant/proposition, use set() to change value")
 	
-func set_val(val: Variant):
+func set_value(val: Variant):
 	interpretation.setd(val)
 	
-func unset_val():
+func unset_value():
 	interpretation.unsetd()
+
+func get_value(_k=0):
+	return interpretation.getd()
 
 func to_structure_line() -> String:
 	if interpretation.is_constant:
@@ -18,7 +21,7 @@ func to_structure_line() -> String:
 func copy() -> Variant:
 	return Constant.new(named,[],output_type,interpretation)
 		
-func update(interpretation: Variant,append=false):
+func update(interpretation: Variant,_append=false):
 	self.interpretation = interpretation
 
 func _to_string() -> String:

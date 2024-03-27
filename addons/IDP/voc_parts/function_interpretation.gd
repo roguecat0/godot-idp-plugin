@@ -28,6 +28,8 @@ func _init(named,interpretation,default) -> void:
 
 func add(key: Variant,val: Variant=true) -> void:
 	#TODO: check if same size
+	if interpretation == {null:null}:
+		interpretation = {key:val}
 	interpretation[key] = val
 
 func remove(key: Variant) -> bool:
@@ -39,6 +41,9 @@ func geti(key):
 func getd():
 	return default
 	
+func has(key):
+	return interpretation.has(key)
+
 func seti(interpretation: Dictionary):
 	self.interpretation = interpretation
 	
