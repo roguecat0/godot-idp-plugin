@@ -54,5 +54,18 @@ func _lt(other) -> Bool:
 func _lte(other) -> Bool:
 	return _generic_comp(other,IDP.LTE)
 
+# first comp has reversed meaning depending on how you look at it
+func _between(term1, term2, comp1: int, comp2: int) -> Bool:
+	if term1 is int or term1 is float or term1 is String:
+		term1 = ArithTerm.new_base(term1)
+	if term2 is int or term2 is float or term2 is String:
+		term2 = ArithTerm.new_base(term2)
+	if comp1 not in [IDP.GT,IDP.GTE,IDP.LT,IDP.LTE]:
+		assert(false, "comparators should be of greater than or less than type")
+	if comp2 not in [IDP.GT,IDP.GTE,IDP.LT,IDP.LTE]:
+		assert(false, "comparators should be of greater than or less than type")
+	return Bool.new("",[term1,Bool.new("",[self,term2],comp2)],comp1)
+
 func _neg() -> ArithTerm:
 	return get_type().new("",[self],IDP.NEG)
+

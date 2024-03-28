@@ -80,7 +80,9 @@ func parse_to_idp()-> String:
 
 		# foreach
 		IDP.EACH:
-			return "%s in %s: %s" % [children[0],children[1],children[2].parse_to_idp()]
+			return ", ".join(range(len(children[0])).map(func(i):\
+				return "%s in %s" % [children[0][i],children[1][i]]))\
+			+ ": %s" % children[2].parse_to_idp()
 		IDP.COUNT:
 			return "#{ %s }" % children[0].parse_to_idp()
 		IDP.SUM:
@@ -149,4 +151,26 @@ func get_type():
 		return Bool
 	if self is ArithTerm:
 		return ArithTerm
+	if self is ForEach:
+		return ForEach
 	return Term
+
+func get_inner_expr():
+	if not operator in [IDP.ALL,IDP.ANY,IDP.EACH,IDP.COUNT]:
+		assert(false,"function should only be used on ALL, ANY, EACH, COUNT terms")
+	return children[0].get_inner_expr()
+
+func set_inner_expr(term: Term):
+	if not operator in [IDP.ALL,IDP.ANY,IDP.EACH,IDP.COUNT]:
+		assert(false,"function should only be used on ALL, ANY, EACH, COUNT terms")
+	if not term is Bool and not term is ForEach:
+		assert(false,"only boolean and foreach terms are allowed")
+	children[0].set_inner_expr(term)
+	return self
+
+func copy():
+	return get_type().new(
+		base,
+		children.map(func(x): return x.copy()),
+		operator
+	)

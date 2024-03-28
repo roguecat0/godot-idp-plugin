@@ -24,7 +24,12 @@ func _ready() -> void:
 	var term11 = ForEach.create(["x","y"],t1,Integer.create("x")._eq("y"))._count()
 	var term12 = ForEach.create("z",t1,Real.create("z")._neq(2))._max(f3.to_term(["z"]))
 	var inner_each = ForEach.create("c",Floats,Integer.create("a")._add("b")._eq("c"))._any()
-	var term13 = (ForEach.create(["a","b"],t1,inner_each))._all()
+	var term13 = term6._between(1,1,IDP.GTE,IDP.GT)
+	# mutli foreach
+	var each1 = ForEach.create(["a","b"], "T",Bool.new_base("lol"))
+	var each2 = ForEach.create([["a","b"],["c"]], [t1,"K"],Bool.new_base("lol"))
+	each2.set_inner_expr(Bool.new_base(true))
+
 	d1.add_term(term3)
 	d1.add_term(term4)
 	d1.add_term(term5)
@@ -34,4 +39,6 @@ func _ready() -> void:
 	kb.add_term(term11) 
 	kb.add_term(term12) 
 	kb.add_term(term13) 
+	kb.add_term(each1) 
+	kb.add_term(each2) 
 	print(kb.parse_to_idp())

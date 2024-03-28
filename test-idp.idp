@@ -1,50 +1,62 @@
 vocabulary V {
-	type Decimal := {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-	A : () -> Decimal
-	E : () -> Decimal
-	I : () -> Decimal
-	B : () -> Decimal
-	C : () -> Decimal
-	D : () -> Decimal
-	even : (Decimal) -> Bool
-	min : () -> Real
+	type Q := {-2, -1, 0, 1, 2}
+	type R := {-2, -1, 0, 1, 2}
+	type Tile := {hills, forest, mountains, fields, pasture, desert, none}
+	type Token := {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+	type Pips := {0, 1, 2, 3, 4, 5}
+	tile_type : (Q * R) -> Tile
+	tile_token : (Q * R) -> Token
+	neighbour : (Q * R * Q * R) -> Bool
+	relevant : (Q * R) -> Bool
+	token_pips : (Token) -> Pips
 
 }
+
 theory T:V {
-	A() ~= 0.
-	~even(A()).
-	E() ~= 0.
-	E() ~= A().
-	~even(E()).
-	I() ~= 0.
-	I() ~= A().
-	I() ~= E().
-	~even(I()).
-	B() ~= 0.
-	B() ~= A().
-	B() ~= E().
-	B() ~= I().
-	~even(B()).
-	C() ~= 0.
-	C() ~= A().
-	C() ~= E().
-	C() ~= I().
-	C() ~= B().
-	~even(C()).
-	D() ~= 0.
-	D() ~= A().
-	D() ~= E().
-	D() ~= I().
-	D() ~= B().
-	D() ~= C().
-	~even(D()).
-I() + A() + 10*A() + 10*B() = E() + 10 * D() + 100 * C().
-A() = min().
+	?q in Q, r in R: tile_token(q, r) = 7 <=> tile_type(q, r) = desert.
+	#{ q in Q, r in R: tile_type(q, r) = hills } = 3.
+	#{ q in Q, r in R: tile_type(q, r) = forest } = 4.
+	#{ q in Q, r in R: tile_type(q, r) = mountains } = 3.
+	#{ q in Q, r in R: tile_type(q, r) = fields } = 4.
+	#{ q in Q, r in R: tile_type(q, r) = pasture } = 4.
+	#{ q in Q, r in R: tile_type(q, r) = desert } = 1.
+	#{ q in Q, r in R: tile_token(q, r) = 2 } = 1.
+	#{ q in Q, r in R: tile_token(q, r) = 3 } = 2.
+	#{ q in Q, r in R: tile_token(q, r) = 4 } = 2.
+	#{ q in Q, r in R: tile_token(q, r) = 5 } = 2.
+	#{ q in Q, r in R: tile_token(q, r) = 6 } = 2.
+	#{ q in Q, r in R: tile_token(q, r) = 7 } = 1.
+	#{ q in Q, r in R: tile_token(q, r) = 8 } = 2.
+	#{ q in Q, r in R: tile_token(q, r) = 9 } = 2.
+	#{ q in Q, r in R: tile_token(q, r) = 10 } = 2.
+	#{ q in Q, r in R: tile_token(q, r) = 11 } = 2.
+	#{ q in Q, r in R: tile_token(q, r) = 12 } = 1.
+	!q in Q, r in R: ~relevant(q, r) <=> tile_type(q, r) = none.
+	!q in Q, r in R: ~relevant(q, r) <=> tile_token(q, r) = 1.
+	
+//	{
+//		!q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) <- ~( q1 = q2 & r1 = r2 ).
+//		!q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) <- -1 =< ( q1 - q2 + r1 - r2 ) =< 1.
+//		!q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) <- relevant(q1, r1) & relevant(q2, r2).
+//	}
+!q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) <=> ~(q1 = q2 & r1 = r2) & -1 =< (q1 - q2) =< 1 & -1 =< (r1 - r2) =< 1 & relevant(q1, r1) & relevant(q2, r2).
+	!q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) => tile_type(q1, r1) ~= tile_type(q2, r2).
+	!q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) => tile_token(q1, r1) ~= tile_token(q2, r2).
+	tile_type(0, 0) = desert.
+	!q1, q2, q3 in Q, r1, r2, r3 in R: neighbour(q1, r1, q2, r2) & neighbour(q1, r1, q3, r3) & neighbour(q2, r2, q3, r3) => token_pips(tile_token(q1, r1)) + token_pips(tile_token(q2, r2)) + token_pips(tile_token(q3, r3)) =< 11.
+	#{ q in Q, r in R: tile_type(q, r) = hills & token_pips(tile_token(q, r)) =< 2 } < 2.
+	#{ q in Q, r in R: tile_type(q, r) = forest & token_pips(tile_token(q, r)) =< 2 } < 3.
+	#{ q in Q, r in R: tile_type(q, r) = mountains & token_pips(tile_token(q, r)) =< 2 } < 2.
+	#{ q in Q, r in R: tile_type(q, r) = fields & token_pips(tile_token(q, r)) =< 2 } < 3.
+	#{ q in Q, r in R: tile_type(q, r) = pasture & token_pips(tile_token(q, r)) =< 2 } < 3.
+
 }
+
 structure S:V {
-	even := {0, 2, 4, 6, 8}.
+	relevant := {(-2, 0), (-2, 1), (-2, 2), (-1, -1), (-1, 0), (-1, 1), (-1, 2), (0, -2), (0, -1), (0, 0), (0, 1), (0, 2), (1, -2), (1, -1), (1, 0), (1, 1), (2, -2), (2, -1), (2, 0)}.
+	token_pips := {1 -> 0, 2 -> 1, 3 -> 2, 4 -> 3, 5 -> 4, 6 -> 5, 7 -> 0, 8 -> 5, 9 -> 4, 10 -> 3, 11 -> 2, 12 -> 1}.
 
 }
 procedure main() {
-	pretty_print(minimize(T,S,term="min()"))
+    pretty_print(model_expand(T, S, max=1))
 }

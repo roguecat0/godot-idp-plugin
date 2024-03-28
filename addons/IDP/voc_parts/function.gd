@@ -114,7 +114,7 @@ func to_term(inputs: Variant=[]):
 		assert(false,"converion of non constant function to term without argumenst")
 		return
 	if len(inputs) != len(input_types):
-		assert(false,"number of arguments of function does not match number of input types")
+		assert(false,"number of arguments of function: %s (%d) does not match number of input types (%d) being: %s" % [named,len(inputs),len(input_types)])
 		return
 	if output_base_type == -1:
 		assert(false,"function has no output_base_type assigned, default of 'Real' assumend")

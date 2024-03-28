@@ -16,7 +16,7 @@ var negative_propogate: Dictionary
 func _init() -> void:
 	pass
 
-func add_type(named: String, enumeration: Array, base_type: int=IDP.IDP_UNKNOWN) -> CustomType:
+func add_type(named: String, enumeration: Array, base_type: int=IDP.UNKNOWN) -> CustomType:
 	var t = CustomType.new(named,enumeration,base_type)
 	types[named] = t
 	return t
@@ -68,7 +68,7 @@ func add_proposition(named: String, val: Variant = null) -> Proposition:
 	return c
 
 func add_term(term: Term):
-	print("idx: " +str(len(formulas))+", val: "+term.parse_to_idp())
+	# print("idx: " +str(len(formulas))+", val: "+term.parse_to_idp())
 	formulas.append(term)
 	return term
 
