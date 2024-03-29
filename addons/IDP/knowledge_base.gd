@@ -68,7 +68,10 @@ func add_proposition(named: String, val: Variant = null) -> Proposition:
 	return c
 
 func add_term(term: Term):
-	# print("idx: " +str(len(formulas))+", val: "+term.parse_to_idp())
+	formulas.append(term)
+	return term
+	
+func add_formula(term: Term):
 	formulas.append(term)
 	return term
 
@@ -154,32 +157,7 @@ func decode_value(val: String) -> Variant:
 	if val.is_valid_float():
 		return float(val)
 	return val
-#func create_from_string(kb_str: String) -> void:
-	#var lines: Array[String] = clean_idp_str(kb_str)
-	#print(lines)
-	#var i: int = 0
-	#var j: int = 0
-	#while i < len(lines):
-		#if lines[i].to_lower().begins_with("vocabulary"):
-			#j = search_block_end(lines,i)
-			#vocabulary.create_from_string("\n".join(lines.slice(i,j+1)))
-			#i=j
-		#elif lines[i].to_lower().begins_with("structure"):
-			#j = search_block_end(lines,i)
-			#structure.create_from_string("\n".join(lines.slice(i,j+1)))
-			#i=j
-		#elif lines[i].to_lower().begins_with("theory"):
-			#j = search_block_end(lines,i)
-			#theory.create_from_string("\n".join(lines.slice(i,j+1)))
-			#i=j
-		#i+=1
-			#
-#func search_block_end(lines: Array[String],idx: int) -> int:
-	#for j: int in range(idx,len(lines)):
-		#if lines[j].begins_with("}"):
-			#return j
-	#return idx
-			#
+	
 func parse_voc_to_idp() -> String:
 	var header: String = "vocabulary V {"
 	var footer: String = "}"

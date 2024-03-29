@@ -1,5 +1,5 @@
 vocabulary V {
-	type Orders := {0, 1, 2}
+	type Orders := {0, 1, 2, 4, 5, 6}
 	maxIron : () -> Int
 	maxWood : () -> Int
 	numDeliveries : () -> Int
@@ -15,10 +15,10 @@ theory T:V {
 
 }
 structure S:V {
-	maxIron := 5.
-	maxWood := 5.
-	ironOrder := {0 -> 4, 1 -> 1, 2 -> 1}.
-	woodOrder := {0 -> 2, 1 -> 1, 2 -> 4}.
+	maxIron := 8.
+	maxWood := 8.
+	ironOrder := {0 -> 4, 1 -> 1, 2 -> 1, 4 -> 1, 5 -> 1, 6 -> 1}.
+	woodOrder := {0 -> 2, 1 -> 1, 2 -> 4, 4 -> 2, 5 -> 1, 6 -> 1}.
 
 }
 procedure main() {
