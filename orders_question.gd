@@ -32,13 +32,10 @@ func setup():
 		woodOrder.add(i,req_wood[i])
 		
 	# rules
-	# kb.add_undefined_line("numDeliveries() = #{o in Orders: deliveries(o)}.",IDP.THEORY)
 	var each_deliveries = ForEach.create("o",Orders,deliveries.to_term("o"))
 	kb.add_term(numDeliveries.to_term()._eq(each_deliveries._count()))
 	kb.add_term(maxIron.to_term()._gte(each_deliveries._sum(ironOrder.to_term("o"))))
 	kb.add_term(maxWood.to_term()._gte(each_deliveries._sum(woodOrder.to_term("o"))))
-	# kb.add_undefined_line("maxIron() >= sum{{ ironOrder(o) | o in Orders: deliveries(o)}}.",IDP.THEORY)
-	# kb.add_undefined_line("maxWood() >= sum{{ woodOrder(o) | o in Orders: deliveries(o)}}.",IDP.THEORY)
 	
 	
 func solve():
