@@ -41,7 +41,7 @@ func _get_base_type(custom_type: Variant):
 	
 func add_function(named: String, in_types: Variant, out_type: Variant, interpretation: Dictionary = {null:null},default=null) -> Symbol:
 	var f = Symbol.new(named,in_types,out_type,SymbolInterpretation.new(named,interpretation,default))
-	f.range_base_type = _get_base_type(out_type)
+	f.range_base = _get_base_type(out_type)
 	symbols[named] = f
 	return f
 	
@@ -51,19 +51,19 @@ func add_predicate(named: String, in_types: Variant, interpretation: Array = [nu
 		v = {}
 		interpretation.map(func(k): v[k]=true)
 	var p = Predicate.new(named,in_types,"Bool",SymbolInterpretation.new(named,v,null))
-	p.output_base_type = IDP.BOOL
+	p.range_base = IDP.BOOL
 	symbols[named] = p
 	return p
 	
 func add_constant(named: String, out_type: Variant, val: Variant = null) -> Constant:
 	var c = Constant.new(named,[],out_type,SymbolInterpretation.new(named,{null:null},val))
-	c.output_base_type = _get_base_type(out_type)
+	c.range_base = _get_base_type(out_type)
 	symbols[named] = c
 	return c
 
 func add_proposition(named: String, val: Variant = null) -> Proposition:
 	var c = Proposition.new(named,[],"Bool",SymbolInterpretation.new(named,{null:null},val))
-	c.output_base_type = IDP.BOOL
+	c.range_base = IDP.BOOL
 	symbols[named] = c
 	return c
 

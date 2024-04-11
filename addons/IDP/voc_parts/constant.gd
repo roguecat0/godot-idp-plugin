@@ -19,12 +19,12 @@ func to_structure_line() -> String:
 	return ""
 
 func copy() -> Variant:
-	return Constant.new(named,[],output_type,interpretation)
+	return Constant.new(named,[],domain,interpretation)
 		
 func update(interpretation: Variant,_append=false):
 	self.interpretation = interpretation
 
 func _to_string() -> String:
 	return "Constant(name: %s, input: %s, output: %s, val: %s)" % [
-		named,domain,output_type,interpretation.getd()
+		named,domain,domain,interpretation.getd()
 	]

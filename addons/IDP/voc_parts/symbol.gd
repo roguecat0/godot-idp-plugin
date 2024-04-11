@@ -5,16 +5,16 @@ var named: String
 var domain: Variant
 var range_: Variant
 var interpretation: SymbolInterpretation
-var range_base_type: int = -1
+var range_base: int = -1
 
-func _init(named: String, input_types: Variant, 
-		output_type: Variant, interpretation: SymbolInterpretation) -> void:
+func _init(named: String, domain_: Variant, 
+		range_: Variant, interpretation: SymbolInterpretation) -> void:
 	self.named = named
-	if input_types is Array:
-		self.domain = input_types.map(func(x): return _parse_custom_type(x))
+	if domain_ is Array:
+		self.domain = domain_.map(func(x): return _parse_custom_type(x))
 	else:
-		self.domain = [_parse_custom_type(input_types)]
-	self.range_ = _parse_custom_type(output_type)
+		self.domain = [_parse_custom_type(domain_)]
+	self.range_ = _parse_custom_type(range_)
 	self.interpretation = interpretation
 	
 func set_default(val):
@@ -116,9 +116,9 @@ func apply(inputs: Variant=[]):
 	if len(inputs) != len(domain):
 		assert(false,"number of arguments of function: %s (%d) does not match number of input types (%d) being: %s" % [named,len(inputs),len(domain)])
 		return
-	if range_base_type == -1:
-		assert(false,"function has no range_base_type assigned, default of 'Real' assumend")
-		range_base_type = IDP.REAL
+	if range_base == -1:
+		assert(false,"function has no range_base assigned, default of 'Real' assumend")
+		range_base = IDP.REAL
 	var terms = []
 	for term in inputs:
 		if term is int or term is float:
@@ -130,7 +130,7 @@ func apply(inputs: Variant=[]):
 		else:
 			terms.append(Term.base_(term))
 
-	match range_base_type:
+	match range_base:
 		IDP.REAL:
 			return Real.new(named,terms,IDP.CALL)
 		IDP.INT:
