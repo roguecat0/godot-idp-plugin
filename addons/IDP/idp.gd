@@ -95,52 +95,23 @@ func minimize(kb: KnowlegdeBase,term: String) -> KnowlegdeBase:
 func maximize(kb: KnowlegdeBase,term: String) -> KnowlegdeBase:
 	return optimize(kb,term,false)
 
-func _parenth(term: Term):
-	return term._parenth()
+func parenth(term: Term):
+	return term.parenth()
 
-func _neg(term: Term):
+func neg(term: Term):
 	if term is ArithTerm:
-		return term._neg()
+		return term.neg()
 	push_error("trying to negate a non-arithmatic term")
-	return Term.new_base("is not and ArithTerm")
+	return Term.base_("is not and ArithTerm")
 
-func _not(term: Term):
+func not_(term: Term):
 	if term is Bool:
-		return term._not()
+		return term.not_()
 	push_error("trying to 'not' a non-boolean term")
-	return Term.new_base("is not and ArithTerm")
+	return Term.base_("is not and ArithTerm")
 
-func _p_neg(term: Term):
-	return term._parenth()._neg()
+func p_neg(term: Term):
+	return term.parenth().neg()
 
-func _p_not(term: Term):
-	return term._parenth()._not()
-
-	
-# func _all(variable:Variant, type:Variant, term: Bool) -> Bool:
-# 	return Bool.new("",[_foreach(variable,type,term)],IDP.ALL)
-#
-# func _any(variable:Variant, type:Variant, term: Bool) -> Bool:
-# 	return Bool.new("",[_foreach(variable,type,term)],IDP.ANY)
-#
-# func _count(variable:Variant, type:Variant, term: Bool) -> Integer:
-# 	return Integer.new("",[_foreach(variable,type,term)],IDP.COUNT)
-#
-# func _sum(val: Term, each: Term):
-# 	return ArithTerm.new("",[val,each],IDP.SUM)
-#
-# func _min(val: Term, each: Term):
-# 	return ArithTerm.new("",[val,each],IDP.MIN)
-#
-# func _max(val: Term, each: Term):
-# 	return ArithTerm.new("",[val,each],IDP.MAX)
-#
-# func _foreach(variable:Variant, type:Variant, term: Bool) -> Term:
-# 	if variable is Array:
-# 		variable = ", ".join(variable)
-# 	if not variable is String:
-# 		assert(false, "variable was not a string or array of strings")
-# 	if type is CustomType:
-# 		type = type.named
-# 	return Term.new("",[variable,type,term],IDP.EACH)
-# 		
+func p_not(term: Term):
+	return term.parenth().not_()

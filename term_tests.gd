@@ -1,25 +1,25 @@
 extends Node
 
 func _ready() -> void:
-	var t1 := ArithTerm.new_base(3)
+	var t1 := ArithTerm.base_(3)
 	print(t1.parse_to_str())
-	var x := ArithTerm.new_base('x')
-	var t3 : ArithTerm = x._add(1)._parenth()
-	var t4 : ArithTerm = t1._div(t3)
-	var y := ArithTerm.new_base('y')
-	var equ = y._lt(t4._parenth())
+	var x := ArithTerm.base_('x')
+	var t3 : ArithTerm = x.add(1).parenth()
+	var t4 : ArithTerm = t1.div(t3)
+	var y := ArithTerm.base_('y')
+	var equ = y.lt(t4.parenth())
 	print(equ.parse_to_idp())
 	
-	var a : Bool= Bool.new_base('a')
-	var b : Bool= Bool.new_base('b')
+	var a : Bool= Bool.base_('a')
+	var b : Bool= Bool.base_('b')
 	equ = (IDP._p_neg(
-			IDP._parenth(
-				(x._add(t1)))
-			._div(y)
-		)._eq(t1)
-		._implies(
-			IDP._parenth(
-				a._rev_implies(b)
+			IDP.parenth(
+				(x.add(t1)))
+			.div(y)
+		).eq(t1)
+		.implies(
+			IDP.parenth(
+				a.rev_implies(b)
 			)))
 	print(equ.parse_to_idp())
 

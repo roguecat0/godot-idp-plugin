@@ -1,7 +1,7 @@
 class_name Integer
 extends ArithTerm
 
-static func new_base(base_a) -> Integer:
+static func base_(base_a) -> Integer:
 	return Integer.new(
 		str(base_a),[],IDP.BASE
 	)

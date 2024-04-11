@@ -90,37 +90,37 @@ func fill_theory(kb: KnowlegdeBase) -> KnowlegdeBase:
 	# define neighbors
 	var definition = []
 	var neighbour_t = neighbour.apply(['q1','r1','q2','r2'])
-	var not_same = IDP.p_not(Integer.base_("q1").eq("q2").and_(Integer.base_("r1").eq("r2")))
+	var not_same = IDP.p_not(Integer.base_("q1").eq("q2").and(Integer.base_("r1").eq("r2")))
 	var distance = IDP.parenth(Integer.base_('q1').sub('q2').add('r1').sub('r2'))
-	var relevant_cords = relevant.apply(['q1','r1']).and_(relevant.apply(['q2','r2']))
-	definition.append(base_each2.copy().set_inner_expr(neighbour_t.defines(not_same)).all())
-	definition.append(base_each2.copy().set_inner_expr(neighbour_t.defines(distance.between(-1,1,IDP.LTE,IDP.LTE))).all())
-	definition.append(base_each2.copy().set_inner_expr(neighbour_t.defines(relevant_cords)).all())
+	var relevant_cords = relevant.apply(['q1','r1']).and(relevant.apply(['q2','r2']))
+	definition.append(base_each2.copy().set_inner_expr(neighbour_t._defines(not_same)).all())
+	definition.append(base_each2.copy().set_inner_expr(neighbour_t._defines(distance.between(-1,1,IDP.LTE,IDP.LTE))).all())
+	definition.append(base_each2.copy().set_inner_expr(neighbour_t._defines(relevant_cords)).all())
 	kb.add_definition(definition)
 	# neighbors not same type option
 	if distinct_neighbor_tile:
 		var different_tile_type = tile_type.apply(['q1','r1']).neq(tile_type.apply(['q2','r2']))
-		kb.add_formula(base_each2.copy().set_inner_expr(neighbour_t.implies(different_tile_type)).all())
+		kb.add_formula(base_each2.copy().set_inner_expr(neighbour_t._implies(different_tile_type)).all())
 	if distinct_neighbor_tile:
 		var different_token_type = tile_token.apply(['q1','r1']).neq(tile_token.apply(['q2','r2']))
-		kb.add_formula(base_each2.copy().set_inner_expr(neighbour_t.implies(different_token_type)).all())
+		kb.add_formula(base_each2.copy().set_inner_expr(neighbour_t._implies(different_token_type)).all())
 	# desert center option
 	if desert_center:
 		kb.add_formula(tile_type.apply([0,0]).eq("desert"))
 	if intersection_limit:
 		var base_each3 = ForEach.create([['q1','q2','q3'],['r1','r2','r3']],[Q,R],Bool.base_(true)).all()
-		var neighours3 = neighbour_t.and_(neighbour.apply(['q1','r1','q3','r3'])).and_(neighbour.apply(['q2','r2','q3','r3']))
+		var neighours3 = neighbour_t.and(neighbour.apply(['q1','r1','q3','r3'])).and(neighbour.apply(['q2','r2','q3','r3']))
 		var tokencount = (token_pips.apply([tile_token.apply(['q1','r1'])])
 			.add(token_pips.apply([tile_token.apply(['q2','r2'])]))
 			.add(token_pips.apply([tile_token.apply(['q3','r3'])]))
 			.lte(11)
 		)
-		kb.add_formula(base_each3.set_inner_expr(neighours3.implies(tokencount)))
+		kb.add_formula(base_each3.set_inner_expr(neighours3._implies(tokencount)))
 	if balance_probability:
 		var tile_balance = {"hills":2,"forest":3,"mountains":2,"fields":3,"pasture":3}
 		for tile in tile_balance.keys():
 			var occ = tile_balance[tile]
-			var inner_for = tile_type.apply(['q','r']).eq(tile).and_(token_pips.apply([tile_token.apply(['q','r'])]).lte(2))
+			var inner_for = tile_type.apply(['q','r']).eq(tile).and(token_pips.apply([tile_token.apply(['q','r'])]).lte(2))
 			kb.add_formula(base_each1.copy().set_inner_expr(inner_for).count().lt(occ))
 	return kb
 

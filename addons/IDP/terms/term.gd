@@ -13,7 +13,7 @@ func _init(base_a,children_a,operator_a):
 	children = children_a
 	operator = operator_a
 
-static func new_base(base_a) -> Term:
+static func base_(base_a) -> Term:
 	return Term.new(
 		str(base_a),[],IDP.BASE
 	)
@@ -23,7 +23,7 @@ static func new_base(base_a) -> Term:
 # 		str(base_a),[],IDP.BASE
 # 	)
 
-func _parenth():
+func parenth():
 	return self.get_type().new("",[self],IDP.PARENTH)
 
 func parse_to_idp()-> String:
@@ -99,34 +99,34 @@ func parse_to_idp()-> String:
 	assert(false,"unimplemented")
 	return ""
 
-func _eq(other: Variant) -> Bool:
+func eq(other: Variant) -> Bool:
 	if other is int:
-		other = Integer.new_base(other)
+		other = Integer.base_(other)
 	if other is float:
-		other = Real.new_base(other)
+		other = Real.base_(other)
 	if other is bool:
-		other = Bool.new_base(other)
+		other = Bool.base_(other)
 	if other is String:
-		other = get_type().new_base(other)
+		other = get_type().base_(other)
 	if is_matching_type(other):
 		print("doesnt break")
 		return Bool.new("",[self,other],IDP.EQ)
 	assert(false,"types did not match")
-	return Bool.new_base("not matching arguments whre not matching types")
+	return Bool.base_("not matching arguments whre not matching types")
 
-func _neq(other: Variant) -> Bool:
+func neq(other: Variant) -> Bool:
 	if other is int:
-		other = Integer.new_base(other)
+		other = Integer.base_(other)
 	if other is float:
-		other = Real.new_base(other)
+		other = Real.base_(other)
 	if other is bool:
-		other = Bool.new_base(other)
+		other = Bool.base_(other)
 	if other is String:
-		other = get_type().new_base(other)
+		other = get_type().base_(other)
 	if is_matching_type(other):
 		return Bool.new("",[self,other],IDP.NEQ)
 	assert(false,"types did not match")
-	return Bool.new_base("not matching arguments whre not matching types")
+	return Bool.base_("not matching arguments whre not matching types")
 
 		
 

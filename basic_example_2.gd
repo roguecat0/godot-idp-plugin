@@ -20,34 +20,34 @@ func _ready() -> void:
 		# var letter: String = letters[i]
 		var letter: Constant = all_letters[i]
 		# kb.add_undefined_line("%s() ~= 0." % letter,IDP.THEORY)
-		var l_term = letter.to_term()
-		kb.add_term(l_term._neq(0))
+		var l_term = letter.apply()
+		kb.add_formula(l_term.neq(0))
 		for j: int in len(letters):
 			if i <= j:
 				break
 			var letter2: Constant = all_letters[j]
 			# var letter2: String = letters[j]
 			# kb.add_undefined_line("%s() ~= %s()." % [letter,letter2],IDP.THEORY)
-			kb.add_term(l_term._neq(letter2.to_term()))
+			kb.add_formula(l_term.neq(letter2.apply()))
 		if letter in even_letter_const:
 			# kb.add_undefined_line("even(%s())." % letter,IDP.THEORY)
-			kb.add_term(even.to_term([l_term]))
+			kb.add_formula(even.apply([l_term]))
 		else:
 			# kb.add_undefined_line("~even(%s())." % letter,IDP.THEORY)
-			kb.add_term(IDP._not(even.to_term([l_term])))
+			kb.add_formula(IDP.not(even.apply([l_term])))
 	# kb.add_undefined_line("I() + A() + 10*A() + 10*B() = E() + 10 * D() + 100 * C().",IDP.THEORY)
 	var first_half = (
-		kb.functions.I.to_term()
-		._add(kb.functions.A.to_term())
-		._add(kb.functions.A.to_term()._mul(10))
-		._add(kb.functions.B.to_term()._mul(10))
+		kb.functions.I.apply()
+		.add(kb.functions.A.apply())
+		.add(kb.functions.A.apply().mul(10))
+		.add(kb.functions.B.apply().mul(10))
 	)
 	var second_half = (
-		kb.functions.E.to_term()
-		._add(kb.functions.D.to_term()._mul(10))
-		._add(kb.functions.C.to_term()._mul(100))
+		kb.functions.E.apply()
+		.add(kb.functions.D.apply().mul(10))
+		.add(kb.functions.C.apply().mul(100))
 	)
-	kb.add_term(first_half._eq(second_half))
+	kb.add_formula(first_half.eq(second_half))
 	
 	
 	# current possible inferences
@@ -63,7 +63,7 @@ func _ready() -> void:
 	print("Minimizion of A():")
 	var minus = kb.add_constant("min","Real")
 	kb.add_undefined_line("A() = min().",IDP.THEORY)
-	kb.add_term(kb.functions.A.to_term()._eq(minus.to_term()))
+	kb.add_formula(kb.functions.A.apply().eq(minus.apply()))
 	IDP.minimize(kb,"min()")
 	print("==== updated kb ====")
 	kb.update_kb_with_solution(kb.solutions[0])

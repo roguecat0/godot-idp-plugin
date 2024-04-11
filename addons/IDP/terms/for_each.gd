@@ -4,16 +4,16 @@ class_name ForEach
 func get_type():
 	return ForEach
 
-func _neq(_other: Variant) -> Bool:
-	assert(false,"_neq not implemented for ForEach")
-	return Bool.new_base("")
+func neq(_other: Variant) -> Bool:
+	assert(false,"neq not implemented for ForEach")
+	return Bool.base_("")
 
-func _eq(_other: Variant) -> Bool:
-	assert(false,"_eq not implemented for ForEach")
-	return Bool.new_base("")
+func eq(_other: Variant) -> Bool:
+	assert(false,"eq not implemented for ForEach")
+	return Bool.base_("")
 
-func _parenth():
-	assert(false,"_parenth not implemented for ForEach")
+func parenth():
+	assert(false,"parenth not implemented for ForEach")
 
 static func _parse_custom_type(val: Variant) -> String:
 	if val is String:
@@ -70,22 +70,22 @@ static func _convert_input_type(type) -> Array:
 	assert(false, "%s: is not a valid type input" % type)
 	return []
 
-func _all() -> Bool:
+func all() -> Bool:
 	return Bool.new("",[self],IDP.ALL)
 
-func _any() -> Bool:
+func any() -> Bool:
 	return Bool.new("",[self],IDP.ANY)
 
-func _count() -> Integer:
+func count() -> Integer:
 	return Integer.new("",[self],IDP.COUNT)
 
-func _sum(val: ArithTerm) -> ArithTerm:
+func sum(val: ArithTerm) -> ArithTerm:
 	return ArithTerm.new("",[val,self],IDP.SUM)
 
-func _min(val: ArithTerm) -> ArithTerm:
+func min(val: ArithTerm) -> ArithTerm:
 	return ArithTerm.new("",[val,self],IDP.MIN)
 
-func _max(val: ArithTerm) -> ArithTerm:
+func max(val: ArithTerm) -> ArithTerm:
 	return ArithTerm.new("",[val,self],IDP.MAX)
 
 func get_expr():

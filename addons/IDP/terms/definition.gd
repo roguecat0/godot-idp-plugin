@@ -6,7 +6,7 @@ var terms: Array
 func _init(terms_a = []) -> void:
 	terms = terms_a
 
-func add_term(term: Term):
+func add_formula(term: Term):
 	terms.append(term)
 	return term
 

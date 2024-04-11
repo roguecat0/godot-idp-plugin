@@ -67,14 +67,10 @@ func add_proposition(named: String, val: Variant = null) -> Proposition:
 	functions[named] = c
 	return c
 
-func add_term(term: Term):
-	formulas.append(term)
-	return term
-	
 func add_formula(term: Term):
 	formulas.append(term)
 	return term
-
+	
 func add_definition(terms: Array=[]):
 	var d = Definition.new(terms)
 	formulas.append(d)

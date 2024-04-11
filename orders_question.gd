@@ -20,6 +20,7 @@ func setup():
 	var Orders := kb.add_type("Orders",Array(range(num_orderse)),IDP.INT)
 	var maxIron : Constant = kb.add_constant("maxIron",IDP.INT,5)
 	var maxWood : Constant = kb.add_constant("maxWood",IDP.INT,5)
+
 	var numDeliveries : Constant = kb.add_constant("numDeliveries",IDP.INT)
 	var deliveries :Predicate = kb.add_predicate("deliveries",Orders)
 	
@@ -32,10 +33,10 @@ func setup():
 		woodOrder.add(i,req_wood[i])
 		
 	# rules
-	var each_deliveries = ForEach.create("o",Orders,deliveries.to_term("o"))
-	kb.add_term(numDeliveries.to_term()._eq(each_deliveries._count()))
-	kb.add_term(maxIron.to_term()._gte(each_deliveries._sum(ironOrder.to_term("o"))))
-	kb.add_term(maxWood.to_term()._gte(each_deliveries._sum(woodOrder.to_term("o"))))
+	var each_deliveries = ForEach.create("o",Orders,deliveries.apply("o"))
+	kb.add_formula(numDeliveries.apply().eq(each_deliveries.count()))
+	kb.add_formula(maxIron.apply().gte(each_deliveries.sum(ironOrder.apply("o"))))
+	kb.add_formula(maxWood.apply().gte(each_deliveries.sum(woodOrder.apply("o"))))
 	
 	
 func solve():
@@ -114,7 +115,7 @@ func _on_set_max_wood_pressed() -> void:
 	update_screen()
 
 
-func _on_add_card_pressed() -> void:
+func _onadd_card_pressed() -> void:
 	if not %AddIron.text.is_valid_int():
 		print("iron not an integer")
 		return

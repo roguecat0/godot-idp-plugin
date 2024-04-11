@@ -107,7 +107,7 @@ func _to_string() -> String:
 		named,input_types,output_type,interpretation.interpretation
 	]
 
-func to_term(inputs: Variant=[]):
+func apply(inputs: Variant=[]):
 	if inputs is String:
 		inputs = [inputs]
 	if not self is Constant and len(inputs) == 0:
@@ -122,13 +122,13 @@ func to_term(inputs: Variant=[]):
 	var terms = []
 	for term in inputs:
 		if term is int or term is float:
-			terms.append(ArithTerm.new_base(term))
+			terms.append(ArithTerm.base_(term))
 		elif term is bool:
-			terms.append(Bool.new_base(term))
+			terms.append(Bool.base_(term))
 		elif term is Term:
 			terms.append(term)
 		else:
-			terms.append(Term.new_base(term))
+			terms.append(Term.base_(term))
 
 	match output_base_type:
 		IDP.REAL:
