@@ -1,20 +1,20 @@
-class_name Function
+class_name Symbol
 extends Node
 
 var named: String
-var input_types: Variant
-var output_type: Variant
-var interpretation: FunctionInterpretation
-var output_base_type: int = -1
+var domain: Variant
+var range_: Variant
+var interpretation: SymbolInterpretation
+var range_base_type: int = -1
 
 func _init(named: String, input_types: Variant, 
-		output_type: Variant, interpretation: FunctionInterpretation) -> void:
+		output_type: Variant, interpretation: SymbolInterpretation) -> void:
 	self.named = named
 	if input_types is Array:
-		self.input_types = input_types.map(func(x): return _parse_custom_type(x))
+		self.domain = input_types.map(func(x): return _parse_custom_type(x))
 	else:
-		self.input_types = [_parse_custom_type(input_types)]
-	self.output_type = _parse_custom_type(output_type)
+		self.domain = [_parse_custom_type(input_types)]
+	self.range_ = _parse_custom_type(output_type)
 	self.interpretation = interpretation
 	
 func set_default(val):
@@ -54,7 +54,7 @@ func _parse_custom_type(val: Variant) -> String:
 		return ""
 
 func to_vocabulary_line() -> String:
-	return "\t%s : (%s) -> %s" % [named," * ".join(input_types),output_type]
+	return "\t%s : (%s) -> %s" % [named," * ".join(domain),range_]
 	
 func to_structure_line() -> String:
 	var s: = ""
@@ -72,14 +72,14 @@ func _parse_enum(key: Variant, val: Variant) -> String:
 	return "%s -> %s" % [_parse_enum_input(key),str(val)]
 	
 func _parse_enum_input(input_enum: Variant) -> String:
-	#packed arrays (input_types) aren't accounted for
-	if len(input_types) > 1:
+	#packed arrays (domain) aren't accounted for
+	if len(domain) > 1:
 		return "(%s)" % ", ".join(Array(input_enum).map(func(x): return str(x)))
 	else:
 		return str(input_enum)
 	
 func copy() -> Variant:
-	return Function.new(named,input_types.duplicate(true),output_type,interpretation.copy())
+	return Symbol.new(named,domain.duplicate(true),range_,interpretation.copy())
 		
 func update(val: Variant,append: bool=false):
 	if not append:
@@ -103,8 +103,8 @@ func has_value(key):
 	return interpretation.interpretation.has(key)
 
 func _to_string() -> String:
-	return "Function(name: %s, input: %s, output: %s, interpretation: %s)" % [
-		named,input_types,output_type,interpretation.interpretation
+	return "Symbol(name: %s, input: %s, output: %s, interpretation: %s)" % [
+		named,domain,range_,interpretation.interpretation
 	]
 
 func apply(inputs: Variant=[]):
@@ -113,12 +113,12 @@ func apply(inputs: Variant=[]):
 	if not self is Constant and len(inputs) == 0:
 		assert(false,"converion of non constant function to term without argumenst")
 		return
-	if len(inputs) != len(input_types):
-		assert(false,"number of arguments of function: %s (%d) does not match number of input types (%d) being: %s" % [named,len(inputs),len(input_types)])
+	if len(inputs) != len(domain):
+		assert(false,"number of arguments of function: %s (%d) does not match number of input types (%d) being: %s" % [named,len(inputs),len(domain)])
 		return
-	if output_base_type == -1:
-		assert(false,"function has no output_base_type assigned, default of 'Real' assumend")
-		output_base_type = IDP.REAL
+	if range_base_type == -1:
+		assert(false,"function has no range_base_type assigned, default of 'Real' assumend")
+		range_base_type = IDP.REAL
 	var terms = []
 	for term in inputs:
 		if term is int or term is float:
@@ -130,7 +130,7 @@ func apply(inputs: Variant=[]):
 		else:
 			terms.append(Term.base_(term))
 
-	match output_base_type:
+	match range_base_type:
 		IDP.REAL:
 			return Real.new(named,terms,IDP.CALL)
 		IDP.INT:

@@ -1,5 +1,5 @@
 class_name Constant
-extends Function
+extends Symbol
 
 func add(_key: Variant,_val: Variant=true) -> void:
 	push_error("can't add to constant/proposition, use set() to change value")
@@ -26,5 +26,5 @@ func update(interpretation: Variant,_append=false):
 
 func _to_string() -> String:
 	return "Constant(name: %s, input: %s, output: %s, val: %s)" % [
-		named,input_types,output_type,interpretation.getd()
+		named,domain,output_type,interpretation.getd()
 	]

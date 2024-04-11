@@ -2,7 +2,7 @@ class_name KnowlegdeBase
 extends Node
 
 var types: Dictionary
-var functions: Dictionary = {}
+var symbols: Dictionary = {}
 var formulas: Array
 
 var undefined_lines: Dictionary = {IDP.THEORY:[],IDP.VOCABULARY:[],IDP.STRUCTURE:[]}
@@ -39,10 +39,10 @@ func _get_base_type(custom_type: Variant):
 	return custom_type.base_type
 	
 	
-func add_function(named: String, in_types: Variant, out_type: Variant, interpretation: Dictionary = {null:null},default=null) -> Function:
-	var f = Function.new(named,in_types,out_type,FunctionInterpretation.new(named,interpretation,default))
-	f.output_base_type = _get_base_type(out_type)
-	functions[named] = f
+func add_function(named: String, in_types: Variant, out_type: Variant, interpretation: Dictionary = {null:null},default=null) -> Symbol:
+	var f = Symbol.new(named,in_types,out_type,SymbolInterpretation.new(named,interpretation,default))
+	f.range_base_type = _get_base_type(out_type)
+	symbols[named] = f
 	return f
 	
 func add_predicate(named: String, in_types: Variant, interpretation: Array = [null]) -> Predicate:
@@ -50,21 +50,21 @@ func add_predicate(named: String, in_types: Variant, interpretation: Array = [nu
 	if interpretation != [null]:
 		v = {}
 		interpretation.map(func(k): v[k]=true)
-	var p = Predicate.new(named,in_types,"Bool",FunctionInterpretation.new(named,v,null))
+	var p = Predicate.new(named,in_types,"Bool",SymbolInterpretation.new(named,v,null))
 	p.output_base_type = IDP.BOOL
-	functions[named] = p
+	symbols[named] = p
 	return p
 	
 func add_constant(named: String, out_type: Variant, val: Variant = null) -> Constant:
-	var c = Constant.new(named,[],out_type,FunctionInterpretation.new(named,{null:null},val))
+	var c = Constant.new(named,[],out_type,SymbolInterpretation.new(named,{null:null},val))
 	c.output_base_type = _get_base_type(out_type)
-	functions[named] = c
+	symbols[named] = c
 	return c
 
 func add_proposition(named: String, val: Variant = null) -> Proposition:
-	var c = Proposition.new(named,[],"Bool",FunctionInterpretation.new(named,{null:null},val))
+	var c = Proposition.new(named,[],"Bool",SymbolInterpretation.new(named,{null:null},val))
 	c.output_base_type = IDP.BOOL
-	functions[named] = c
+	symbols[named] = c
 	return c
 
 func add_formula(term: Term):
@@ -89,7 +89,7 @@ func parse_solutions(out_lines: Array) -> Array:
 	return model_solutions
 	
 func update_kb_with_solution(solution: Dictionary):
-	solution.keys().map(func(k): functions[k].interpretation = solution[k])
+	solution.keys().map(func(k): symbols[k].interpretation = solution[k])
 	
 func parse_model_functions(model: Array) -> Dictionary:
 	var model_solutions = {}
@@ -102,14 +102,14 @@ func parse_model_functions(model: Array) -> Dictionary:
 func add_undefined_line(line: String, block: int):
 	undefined_lines[block].append(line)
 	
-func parse_function_line(line: String) -> FunctionInterpretation:
+func parse_function_line(line: String) -> SymbolInterpretation:
 	var parts = line.replace(" ","").split(":=")
 	var named = parts[0]
 	var content = parts[1]
 	content =  parse_interpretation(content)
 	if content is Dictionary:
-		return FunctionInterpretation.new(named,content,null)
-	return FunctionInterpretation.new(named,{null:null},content)
+		return SymbolInterpretation.new(named,content,null)
+	return SymbolInterpretation.new(named,{null:null},content)
 	
 	
 func parse_interpretation(content: String) -> Variant:
@@ -167,7 +167,7 @@ func types_as_str() -> String:
 	return "\n".join(types.values().map(func(x): return x.to_vocabulary_line()))
 	#
 func functions_voc_as_str() -> String:
-	return "\n".join(functions.values().map(func(x): return x.to_vocabulary_line()))
+	return "\n".join(symbols.values().map(func(x): return x.to_vocabulary_line()))
 
 func parse_the_to_idp() -> String:
 	var header: String = "theory T:V {"
@@ -188,7 +188,7 @@ func parse_str_to_idp() -> String:
 		parse_undefined_lines(IDP.STRUCTURE),footer])
 
 func functions_str_as_str() -> String:
-	return "\n".join(functions.values().map(func(x): 
+	return "\n".join(symbols.values().map(func(x): 
 		return x.to_structure_line()).filter(func(x): return x != ""))
 func parse_to_idp() -> String:
 	return "\n".join([parse_voc_to_idp(),parse_the_to_idp(),parse_str_to_idp()])

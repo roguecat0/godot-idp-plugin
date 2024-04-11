@@ -51,12 +51,12 @@ func create_kb() -> KnowlegdeBase:
 func fill_theory(kb: KnowlegdeBase) -> KnowlegdeBase:
 	kb.formulas = []
 	var Tile = kb.types.Tile
-	var tile_type = kb.functions.tile_type
-	var tile_token = kb.functions.tile_token
-	var relevant_term = kb.functions.relevant.apply(["q","r"])
-	var relevant = kb.functions.relevant
-	var neighbour = kb.functions.neighbour
-	var token_pips = kb.functions.token_pips
+	var tile_type = kb.symbols.tile_type
+	var tile_token = kb.symbols.tile_token
+	var relevant_term = kb.symbols.relevant.apply(["q","r"])
+	var relevant = kb.symbols.relevant
+	var neighbour = kb.symbols.neighbour
+	var token_pips = kb.symbols.token_pips
 	var Q = kb.types.Q
 	var R = kb.types.R
 	var base_each1 = ForEach.create([["q"],["r"]],[Q,R],Bool.base_(true))
