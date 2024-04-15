@@ -10,11 +10,35 @@ var undefined_lines: Dictionary = {IDP.THEORY:[],IDP.VOCABULARY:[],IDP.STRUCTURE
 var solvable: bool = true
 var solved: bool = false
 var solutions: Array
-var positive_propogate: Dictionary
-var negative_propogate: Dictionary
+"""
+pos:
+{
+	"symbol":{
+		(applied domain): range
+	}
+}
+"""
+var positive_propagates: Dictionary
+"""
+neg:
+{
+	"symbol":{
+		(applied domain): [range]
+	}
+}
+"""
+var negative_propagates: Dictionary
+var id: int
+static var max_id: int = 0
 
-func _init() -> void:
-	pass
+signal finished_inference(inference_type)
+
+func _init(id: int) -> void:
+	self.id = id
+
+static func get_max_id() -> int:
+	max_id += 1
+	return max_id
 
 func add_type(named: String, enumeration: Array, base_type: int=IDP.UNKNOWN) -> CustomType:
 	var t = CustomType.new(named,enumeration,base_type)
@@ -76,18 +100,63 @@ func add_definition(terms: Array=[]):
 	formulas.append(d)
 	return d
 	
-func parse_solutions(out_lines: Array) -> Array:
+func parse_solutions(out_lines: Array, inference_type: int) -> void:
 	#TODO: fix bug, adds an empty string to predicates when nothing to add
+	match inference_type:
+		IDP.PROPAGATE:
+			parse_propagation(out_lines)
+		_:
+			parse_expansion(out_lines)
+	print(inference_type, ": inf type is ")
+	finished_inference.emit(inference_type)
+
+func parse_propagation(outlines) -> void:
+	negative_propagates = {}
+	positive_propagates = {}
+	symbols.keys().map(func(key):
+		negative_propagates[key] = {}
+		positive_propagates[key] = {}
+	)
+	var end = outlines.find("No more consequences.")
+	var propagation_lines = outlines.slice(0,end)
+	propagation_lines.map(func(x): parse_propagation_line(x))
+	print(negative_propagates)
+	print(positive_propagates)
+
+
+func parse_propagation_line(line) -> void:
+	var is_positive_propagation = true
+	if line.begins_with("Not "):
+		is_positive_propagation = false
+		line = line.substr(4)
+	line = line.replace(" ","").replace("->","=")
+	var contents = line.split("=")
+	var tmp = contents[0].split("(")
+	var symbol = tmp[0]
+	tmp = tmp[1].replace(")","")
+	var domain = [] if tmp == "" else decode_string_values(tmp)
+	var range_ = is_positive_propagation if len(contents) == 1 else decode_value(contents[1])
+	if is_positive_propagation:
+		positive_propagates[symbol][domain] = range_
+	else:
+		if negative_propagates[symbol].get(domain) == null:
+			negative_propagates[symbol][domain] = [range_]
+		else:
+			negative_propagates[symbol][domain].append(range_)
+	print(line, ": is_pos == ", is_positive_propagation)
+	
+
+func parse_expansion(out_lines) -> void:
 	if out_lines.front() == "No models.":
 		solvable = false
 		print("model not solvable")
-		return []
+		return
 	var models : Array = []
 	out_lines = out_lines.filter(func(x): return ":=" in x and not x.begins_with("//"))
 	models.append(out_lines)
-	var model_solutions = models.map(func(x): return parse_model_functions(x))
-	return model_solutions
-	
+	solutions = models.map(func(x): return parse_model_functions(x))
+	solved = true
+
 func update_kb_with_solution(solution: Dictionary):
 	solution.keys().map(func(k): symbols[k].interpretation = solution[k])
 	
@@ -190,5 +259,6 @@ func parse_str_to_idp() -> String:
 func functions_str_as_str() -> String:
 	return "\n".join(symbols.values().map(func(x): 
 		return x.to_structure_line()).filter(func(x): return x != ""))
+
 func parse_to_idp() -> String:
 	return "\n".join([parse_voc_to_idp(),parse_the_to_idp(),parse_str_to_idp()])

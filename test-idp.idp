@@ -1,24 +1,48 @@
 
+// vocabulary V {
+// 	type T := {0..4}
+// 	type R := {1.2,3,3.4,5.6}
+// 	test : T -> Bool
+// 	t: R -> T
+// }
+// 
+// theory T:V {
+// 	test(0).
+// 	~test(1).
+// 	t(8) = 3.
+// 	test(2).
+// }
+// 
+// structure S:V {
+// }
+// 
+// procedure main() {
+// 	//pretty_print(Theory(T,S).propagate(complete=True))
+// 
+// 	pretty_print(model_propagate(T,complete=True))
+// 	// pretty_print(model_expand(T,max=1))
+// }
+
 vocabulary V {
-	type T := {0..4}
-	type R := {1.2,3,3.4,5.6}
-	test : T -> Bool
-	t: R -> T
+	type Y := {0, 1, 2}
+	y : (Y) -> Bool
+	a : (Y) -> Y
+	f : (Y * Y) -> Y
+	c : () -> Int
+	b : () -> Y
+	d : () -> Bool
 }
 
 theory T:V {
-	test(0).
-	~test(1).
-	t(8) = 3.
-	test(2).
+	b() = c().
+
 }
 
 structure S:V {
+	y := {2}.
+	a >> {2 -> 2}.
 }
 
 procedure main() {
-	//pretty_print(Theory(T,S).propagate(complete=True))
-
-	//pretty_print(model_propagate(T,complete=True))
-	pretty_print(model_expand(T,max=1))
+	pretty_print(model_expand(T,S,max=1))
 }

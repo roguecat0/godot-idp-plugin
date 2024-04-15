@@ -132,12 +132,16 @@ func neq(other: Variant) -> Bool:
 
 func is_matching_type(other) -> bool:
 	if self is ArithTerm and not other is ArithTerm:
+		print("here2")
 		return false
 	if other is ArithTerm and not self is ArithTerm:
+		print("here3")
 		return false
 	if self is Bool and not other is Bool:
+		print("here4")
 		return false
 	if other is Bool and not self is Bool:
+		print("here5")
 		return false
 	return true
 	

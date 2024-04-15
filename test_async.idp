@@ -1,0 +1,18 @@
+
+vocabulary V {
+	type T := {0..4}
+	type R := {1.2,3,3.4,5.6}
+	test : T -> Bool
+	t: R -> T
+}
+
+theory T:V {
+	test(0).
+	~test(1).
+	t(8) = 3.
+	test(2).
+}
+
+structure S:V {
+}
+
