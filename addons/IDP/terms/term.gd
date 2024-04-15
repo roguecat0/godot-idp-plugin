@@ -109,7 +109,6 @@ func eq(other: Variant) -> Bool:
 	if other is String:
 		other = get_type().base_(other)
 	if is_matching_type(other):
-		print("doesnt break")
 		return Bool.new("",[self,other],IDP.EQ)
 	assert(false,"types did not match")
 	return Bool.base_("not matching arguments whre not matching types")

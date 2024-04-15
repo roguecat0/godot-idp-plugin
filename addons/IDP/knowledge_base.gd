@@ -61,12 +61,45 @@ func _get_base_type(custom_type: Variant):
 			_:
 				custom_type = types.get(custom_type)
 	return custom_type.base_type
+
+func get_domain_size(domain):
+	var sum = 1
+	for type in domain:
+		if type is String:
+			sum *= _get_type_size(type)
+	return sum
+
+func _get_type_size(type):
+	if type is int:
+		match type:
+			IDP.BOOL:
+				return 2
+			_:
+				return 999999
+	if type is String:
+		match type:
+			"Bool":
+				return IDP.BOOL
+			"Int":
+				return 99999
+			"Real":
+				return 99999
+			"Date":
+				return 99999
+			_:
+				type = types.get(type)
+
+	if type is CustomType:
+		return len(type.enums)
+	assert(false, "domand(%s) has no valid type" % type)
 	
+		
 	
-func add_function(named: String, in_types: Variant, out_type: Variant, interpretation: Dictionary = {null:null},default=null) -> Symbol:
-	var f = Symbol.new(named,in_types,out_type,SymbolInterpretation.new(named,interpretation,default))
+func add_function(named: String, in_types: Variant, out_type: Variant, interpretation: Dictionary = {null:null}, partially_interpreted=false, default=null) -> Function:
+	var f = Function.new(named,in_types,out_type,SymbolInterpretation.new(named,interpretation,default),partially_interpreted)
 	f.range_base = _get_base_type(out_type)
 	symbols[named] = f
+	f.domain_size = get_domain_size(f.domain)
 	return f
 	
 func add_predicate(named: String, in_types: Variant, interpretation: Array = [null]) -> Predicate:

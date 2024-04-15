@@ -14,8 +14,15 @@ signal inference_done(std_out, kb, inference_type)
 
 const IDP_PATH = ".expand_input.idp" 
 
+var force_partial_interpretation = true
+
 func _ready():
 	inference_done.connect(_receive_inference_output)
+func disable_forcefull_partial_interpretation() -> void:
+	force_partial_interpretation = false
+
+func enable_forcefull_partial_interpretation() -> void:
+	force_partial_interpretation = true
 
 func _get_new_id():
 	return KnowlegdeBase.get_max_id()

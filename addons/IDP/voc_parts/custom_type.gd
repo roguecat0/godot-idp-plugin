@@ -12,3 +12,6 @@ func _init(n: String, enumeration: Array, base_type: int=IDP.IDP_UNKNOWN) -> voi
 
 func to_vocabulary_line() -> String:
 	return "\ttype %s := {%s}" % [named,", ".join(enums.map(func(x: Variant) -> String: return str(x)))]
+
+func _to_string() -> String:
+	return "Type: %s, range: %s" % [named, str(enums)]

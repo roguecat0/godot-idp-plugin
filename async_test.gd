@@ -4,16 +4,19 @@ func _ready() -> void:
 	var kb = IDP.create_empty_kb()
 	var Y = kb.add_type("Y",range(3), IDP.INT)
 	kb.add_predicate("y", Y,[2])
-	var a: Symbol = kb.add_function("a", Y,Y)
-	var f = kb.add_function("f", [Y,Y],Y)
-	var c = kb.add_constant("c",IDP.INT)
-	var b = kb.add_constant('b',Y)
+	var a: Function = kb.add_function("a", Y, Y, {null:null}, false)
+	var f = kb.add_function("f", [Y,Y], Y)
+	var c = kb.add_constant("c", IDP.INT)
+	var b = kb.add_constant('b', Y)
 	var d = kb.add_proposition('d')
 	var bt = b.apply()
 	var ct = c.apply()
 	kb.add_formula(bt.eq(ct))
 
 	a.add(2,2)
+	f.add([2,2],2)
+	f.add([0,2],1)
+	# IDP.disable_forcefull_partial_interpretation()
 	IDP.model_expand_async(kb)
 	await kb.finished_inference
 

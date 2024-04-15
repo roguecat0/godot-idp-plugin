@@ -7,8 +7,9 @@ var range_: Variant
 var interpretation: SymbolInterpretation
 var range_base: int = -1
 
-func _init(named: String, domain_: Variant, 
-		range_: Variant, interpretation: SymbolInterpretation) -> void:
+var domain_size: int
+
+func _init(named: String, domain_: Variant, range_: Variant, interpretation: SymbolInterpretation) -> void:
 	self.named = named
 	if domain_ is Array:
 		self.domain = domain_.map(func(x): return _parse_custom_type(x))
