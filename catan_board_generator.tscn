@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://df13kuu3vt6n2"]
+[gd_scene load_steps=5 format=3 uid="uid://df13kuu3vt6n2"]
 
 [ext_resource type="Script" path="res://catan_board_generator.gd" id="1_008gr"]
+[ext_resource type="PackedScene" uid="uid://u6bx6k2akyih" path="res://catan_board/hex_map.tscn" id="2_2mal0"]
+[ext_resource type="PackedScene" uid="uid://w2clc6o85p3w" path="res://catan_board/token.tscn" id="3_tbd3l"]
+[ext_resource type="FontFile" uid="uid://whs4gy87r3fv" path="res://catan_board/Xolonium-Regular.ttf" id="4_htuhm"]
 
 [node name="CatanBoardGenerator" type="Control"]
 layout_mode = 3
@@ -10,3 +13,129 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_008gr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 752.0
+offset_top = -4.0
+offset_right = 1154.0
+offset_bottom = 650.0
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_htuhm")
+theme_override_font_sizes/font_size = 50
+text = "Catan gen"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_htuhm")
+theme_override_font_sizes/font_size = 42
+text = "Generate"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title2" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_htuhm")
+theme_override_font_sizes/font_size = 38
+text = "Desert center"
+horizontal_alignment = 1
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title2" type="Label" parent="VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_htuhm")
+theme_override_font_sizes/font_size = 38
+text = "neigbour same
+ resource"
+horizontal_alignment = 1
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title2" type="Label" parent="VBoxContainer/HBoxContainer7"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_htuhm")
+theme_override_font_sizes/font_size = 38
+text = "neigbour same
+ token"
+horizontal_alignment = 1
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer7"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title2" type="Label" parent="VBoxContainer/HBoxContainer8"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_htuhm")
+theme_override_font_sizes/font_size = 38
+text = "balanced
+probabilities"
+horizontal_alignment = 1
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer8"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title2" type="Label" parent="VBoxContainer/HBoxContainer9"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_htuhm")
+theme_override_font_sizes/font_size = 38
+text = "max 11 pips per
+instersection"
+horizontal_alignment = 1
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer9"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="HexMap" parent="." instance=ExtResource("2_2mal0")]
+position = Vector2(200, 200)
+scale = Vector2(3, 3)
+token_scene = ExtResource("3_tbd3l")
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_generate"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/CheckButton" to="." method="_on_desert_center"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer6/CheckButton" to="." method="_on_neigbour_resource"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer7/CheckButton" to="." method="_on_neighbour_token"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer8/CheckButton" to="." method="_on_balance_prob"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer9/CheckButton" to="." method="_on_max_pips"]
