@@ -32,13 +32,9 @@ theory T:V {
 	#{ q in Q, r in R: tile_token(q, r) = 12 } = 1.
 	!q in Q, r in R: ~relevant(q, r) <=> tile_type(q, r) = none.
 	!q in Q, r in R: ~relevant(q, r) <=> tile_token(q, r) = 1.
+	!q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) => tile_type(q1, r1) ~= tile_type(q2, r2).
+	!q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) => tile_token(q1, r1) ~= tile_token(q2, r2).
 	tile_type(0, 0) = desert.
-	!q1, q2, q3 in Q, r1, r2, r3 in R: neighbour(q1, r1, q2, r2) & neighbour(q1, r1, q3, r3) & neighbour(q2, r2, q3, r3) => token_pips(tile_token(q1, r1)) + token_pips(tile_token(q2, r2)) + token_pips(tile_token(q3, r3)) =< 11.
-	#{ q in Q, r in R: tile_type(q, r) = hills & token_pips(tile_token(q, r)) =< 2 } < 2.
-	#{ q in Q, r in R: tile_type(q, r) = forest & token_pips(tile_token(q, r)) =< 2 } < 3.
-	#{ q in Q, r in R: tile_type(q, r) = mountains & token_pips(tile_token(q, r)) =< 2 } < 2.
-	#{ q in Q, r in R: tile_type(q, r) = fields & token_pips(tile_token(q, r)) =< 2 } < 3.
-	#{ q in Q, r in R: tile_type(q, r) = pasture & token_pips(tile_token(q, r)) =< 2 } < 3.
  !q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) <=> ~(q1 = q2 & r1 = r2) & -1 =< (q1 - q2) =< 1 & -1 =< (r1 - r2) =< 1 & relevant(q1, r1) & relevant(q2, r2).
 }
 structure S:V {

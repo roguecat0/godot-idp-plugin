@@ -84,25 +84,25 @@ func _receive_inference_output(std_out, kb, inference_type) -> void:
 	print(std_out)
 	kb.parse_solutions(std_out,inference_type)
 
-func model_expand_async(kb: KnowlegdeBase) -> void:
-	_setup_model_expand(kb)
+func model_expand_async(kb: KnowlegdeBase, max_: int) -> void:
+	_setup_model_expand(kb, max_)
 	var thread = Thread.new()
 	thread.start(call_async_inference.bind(kb, EXPAND))
 
 	
-func model_expand(kb: KnowlegdeBase) -> KnowlegdeBase:
-	_setup_model_expand(kb)
+func model_expand(kb: KnowlegdeBase, max_: int=10) -> KnowlegdeBase:
+	_setup_model_expand(kb, max_)
 	var std_out: Array = get_inference_output()
 	print(std_out)
 	kb.parse_solutions(std_out,EXPAND)
 	return kb
 
-func _setup_model_expand(kb: KnowlegdeBase):
+func _setup_model_expand(kb: KnowlegdeBase, max_: int):
 	var main_block: String = """
 procedure main() {
-	pretty_print(model_expand(T,S,max=1))
+	pretty_print(model_expand(T,S,max=%d))
 }
-"""
+""" % max_
 	_setup_inference_file(kb, main_block)
 	
 	

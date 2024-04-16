@@ -187,9 +187,14 @@ func parse_expansion(out_lines) -> void:
 		solvable = false
 		print("model not solvable")
 		return
+	var new_lines = "\n".join(out_lines).split("==========")
+	if len(new_lines) == 1:
+		push_warning("no valid models")
+		return
+	new_lines = Array(new_lines.slice(1))
 	var models : Array = []
-	out_lines = out_lines.filter(func(x): return ":=" in x and not x.begins_with("//"))
-	models.append(out_lines)
+	new_lines.map(func(group): models.append(Array(group.split("\n")).filter(func(x): return ":=" in x and not x.begins_with("//"))))
+	# models.append(out_lines)
 	solutions = models.map(func(x): return parse_model_functions(x))
 	solved = true
 

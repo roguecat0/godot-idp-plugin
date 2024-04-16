@@ -145,7 +145,7 @@ func _input(event: InputEvent) -> void:
 
 func _on_generate() -> void:
 	fill_theory(kb)
-	IDP.model_expand(kb)
+	IDP.model_expand(kb,1)
 	$HexMap.set_tiles(kb.solutions[0].tile_type.interpretation)
 	$HexMap.set_tokens(kb.solutions[0].tile_token.interpretation)
 
