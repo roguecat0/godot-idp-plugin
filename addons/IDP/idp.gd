@@ -56,6 +56,7 @@ func create_empty_kb() -> KnowlegdeBase:
 func _setup_inference_file(kb: KnowlegdeBase,main_block:String) -> void:
 	var kb_str: String = kb.parse_to_idp()+main_block
 	print(kb_str)
+	print("inf is set up")
 	_save(IDP_PATH,kb_str)
 	
 func get_inference_output() -> Array:
@@ -164,7 +165,7 @@ func _setup_propagate(kb: KnowlegdeBase, complete: bool) -> void:
 procedure main() {
 	pretty_print(model_propagate(T,complete=%s))
 }
-""" % "True" if complete else "False"
+""" % ["True" if complete else "False"]
 	_setup_inference_file(kb,main_block)
 
 

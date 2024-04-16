@@ -31,7 +31,7 @@ var negative_propagates: Dictionary
 var id: int
 static var max_id: int = 0
 
-signal finished_inference(inference_type)
+signal finished_inference(kb, inference_type)
 
 func _init(id: int) -> void:
 	self.id = id
@@ -94,7 +94,6 @@ func _get_type_size(type):
 	assert(false, "domand(%s) has no valid type" % type)
 	
 		
-	
 func add_function(named: String, in_types: Variant, out_type: Variant, interpretation: Dictionary = {null:null}, partially_interpreted=false, default=null) -> Function:
 	var f = Function.new(named,in_types,out_type,SymbolInterpretation.new(named,interpretation,default),partially_interpreted)
 	f.range_base = _get_base_type(out_type)
@@ -135,13 +134,18 @@ func add_definition(terms: Array=[]):
 	
 func parse_solutions(out_lines: Array, inference_type: int) -> void:
 	#TODO: fix bug, adds an empty string to predicates when nothing to add
+	if out_lines[0].begins_with("Traceback"):
+		print("IDP error occured, exiting parse function")
+		return
+
 	match inference_type:
 		IDP.PROPAGATE:
 			parse_propagation(out_lines)
 		_:
 			parse_expansion(out_lines)
 	print(inference_type, ": inf type is ")
-	finished_inference.emit(inference_type)
+	# finished_inference.emit(self, inference_type)
+	call_deferred("emit_signal", "finished_inference", self,inference_type)
 
 func parse_propagation(outlines) -> void:
 	negative_propagates = {}
@@ -153,8 +157,8 @@ func parse_propagation(outlines) -> void:
 	var end = outlines.find("No more consequences.")
 	var propagation_lines = outlines.slice(0,end)
 	propagation_lines.map(func(x): parse_propagation_line(x))
-	print(negative_propagates)
-	print(positive_propagates)
+	# print(negative_propagates)
+	# print(positive_propagates)
 
 
 func parse_propagation_line(line) -> void:
@@ -176,7 +180,6 @@ func parse_propagation_line(line) -> void:
 			negative_propagates[symbol][domain] = [range_]
 		else:
 			negative_propagates[symbol][domain].append(range_)
-	print(line, ": is_pos == ", is_positive_propagation)
 	
 
 func parse_expansion(out_lines) -> void:
@@ -192,6 +195,23 @@ func parse_expansion(out_lines) -> void:
 
 func update_kb_with_solution(solution: Dictionary):
 	solution.keys().map(func(k): symbols[k].interpretation = solution[k])
+
+func update_kb_with_propagate():
+	for symbol in symbols.values():
+		update_symbol_with_propagate(symbol)
+
+func update_symbol_with_propagate(symbol):
+	var updater = positive_propagates[symbol.named]
+	if len(updater.keys()) == 0:
+		return
+	if updater.keys()[0] == []:
+		symbol.interpretation.setd(updater[[]])
+		return
+	for key in updater.keys():
+		var value = updater[key]
+		symbol.add(key,value)
+		
+	
 	
 func parse_model_functions(model: Array) -> Dictionary:
 	var model_solutions = {}

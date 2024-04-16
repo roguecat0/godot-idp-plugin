@@ -68,10 +68,13 @@ func _parse_enum(key: Variant, val: Variant) -> String:
 	
 func _parse_enum_input(input_enum: Variant) -> String:
 	#packed arrays (domain) aren't accounted for
+	if not input_enum is Array:
+		return str(input_enum)
+
 	if len(domain) > 1:
 		return "(%s)" % ", ".join(Array(input_enum).map(func(x): return str(x)))
 	else:
-		return str(input_enum)
+		return str(input_enum[0])
 	
 func copy() -> Variant:
 	return Symbol.new(named,domain.duplicate(true),range_,interpretation.copy())

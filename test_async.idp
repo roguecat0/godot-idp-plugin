@@ -1,18 +1,31 @@
-
 vocabulary V {
-	type T := {0..4}
-	type R := {1.2,3,3.4,5.6}
-	test : T -> Bool
-	t: R -> T
-}
+	type Y := {0, 1, 2}
+	y : (Y) -> Bool
+	a : (Y) -> Y
+	f : (Y * Y) -> Y
+	c : () -> Int
+	b : () -> Y
+	d : () -> Bool
 
+}
 theory T:V {
-	test(0).
-	~test(1).
-	t(8) = 3.
-	test(2).
-}
+	b() = c().
+	b() = 1.
+	d().
+	a(0) = 0.
+	a(2) = 1.
+	f(2, 1) = 1.
 
+}
 structure S:V {
-}
+	y := {2}.
+	a >> {[0] -> 0, [2] -> 1}.
+	f >> {(2, 1) -> 1}.
+	c := 1.
+	b := 1.
+	d := true.
 
+}
+procedure main() {
+	pretty_print(model_propagate(T,complete=True))
+}
