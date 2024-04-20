@@ -19,5 +19,5 @@ structure S:V {
 
 }
 procedure main() {
-	pretty_print(model_expand(T,S,max=2))
+	pretty_print(model_expand(T,S,max=10))
 }
