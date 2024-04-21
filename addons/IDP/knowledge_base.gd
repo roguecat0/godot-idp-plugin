@@ -94,26 +94,26 @@ func _get_type_size(type):
 	assert(false, "domand(%s) has no valid type" % type)
 	
 		
-func add_function(named: String, in_types: Variant, out_type: Variant, interpretation: Dictionary = {null:null}, partially_interpreted=false, default=null) -> Function:
-	var f = Function.new(named,in_types,out_type,SymbolInterpretation.new(named,interpretation,default),partially_interpreted)
-	f.range_base = _get_base_type(out_type)
+func add_function(named: String, domain: Variant, range_: Variant, interpretation: Dictionary = {null:null}, partially_interpreted=false, default=null) -> Function:
+	var f = Function.new(named,domain,range_,SymbolInterpretation.new(named,interpretation,default),partially_interpreted)
+	f.range_base = _get_base_type(range_)
 	symbols[named] = f
 	f.domain_size = get_domain_size(f.domain)
 	return f
 	
-func add_predicate(named: String, in_types: Variant, interpretation: Array = [null]) -> Predicate:
+func add_predicate(named: String, domain: Variant, interpretation: Array = [null]) -> Predicate:
 	var v = {null:null}
 	if interpretation != [null]:
 		v = {}
 		interpretation.map(func(k): v[k]=true)
-	var p = Predicate.new(named,in_types,"Bool",SymbolInterpretation.new(named,v,null))
+	var p = Predicate.new(named,domain,"Bool",SymbolInterpretation.new(named,v,null))
 	p.range_base = IDP.BOOL
 	symbols[named] = p
 	return p
 	
-func add_constant(named: String, out_type: Variant, val: Variant = null) -> Constant:
-	var c = Constant.new(named,[],out_type,SymbolInterpretation.new(named,{null:null},val))
-	c.range_base = _get_base_type(out_type)
+func add_constant(named: String, range_: Variant, val: Variant = null) -> Constant:
+	var c = Constant.new(named,[],range_,SymbolInterpretation.new(named,{null:null},val))
+	c.range_base = _get_base_type(range_)
 	symbols[named] = c
 	return c
 

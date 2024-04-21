@@ -117,7 +117,7 @@ func get_inference_output(file_path: String) -> Array:
 	return std_out
 
 func call_async_inference(kb: KnowlegdeBase, inference_type: int, inf_path) -> void:
-	print("called inf: ", inference_type, ", on kb with path: ", inf_path)
+	print("called inf: ", inference_type, ", on kb: ", kb.id ,", with path: ", inf_path)
 	var std_out = get_inference_output(inf_path)
 	call_deferred("emit_signal", "inference_done", std_out,kb,inference_type)
 
