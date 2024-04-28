@@ -18,10 +18,14 @@ func _ready() -> void:
 	f.add([2,2],2)
 	f.add([0,2],1)
 	# IDP.disable_forcefull_partial_interpretation()
+	# IDP.set_max_inference_threads(1)
+	IDP.model_expand_async(kb,10)
 	IDP.model_expand_async(kb,2)
+	print("inferences: ", IDP.active_inferences, ", queue: ", IDP.inference_queue)
 	await kb.finished_inference
-	print("hello")
-	IDP.model_expand(kb,2)
+	print("Done.")
+	print("inferences: ", IDP.active_inferences, ", queue: ", IDP.inference_queue)
+	# IDP.model_expand(kb,2)
 
 	# IDP.minimize_async(kb,ct.parse_to_idp())
 	# await kb.finished_inference

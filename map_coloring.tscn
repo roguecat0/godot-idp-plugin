@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsh3bb41pj51i"]
+
+[ext_resource type="Script" path="res://map_coloring.gd" id="1_mbdld"]
+
+[node name="MapColoring" type="Node"]
+script = ExtResource("1_mbdld")

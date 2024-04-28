@@ -1,0 +1,18 @@
+vocabulary V {
+	type country := {Belguim, Germany, France}
+	type color := {Red, Blue, Green, Yellow}
+	Bordering : (country * country) -> Bool
+	ColourOf : (country) -> color
+
+}
+theory T:V {
+	
+
+}
+structure S:V {
+	Bordering := {(Belguim, France), (Belguim, Germany), (Germany, France)}.
+
+}
+procedure main() {
+	pretty_print(model_expand(T,S,max=1))
+}
