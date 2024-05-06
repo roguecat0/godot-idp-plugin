@@ -2,3 +2,4 @@
 .godot/
 .venv
 .expand_input.idp
+addons/godot_vim/
