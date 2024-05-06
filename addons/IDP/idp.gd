@@ -108,12 +108,7 @@ func get_inference_output(file_path: String) -> Array:
 	# TODO: add error output handeling
 	if std_out[0].begins_with("Traceback"):
 		print("\n".join(std_out.slice(max(0,len(std_out)-20))))
-		push_error("IDP - Error")
-		#count += 1
-		#for line in Array(kb.parse_to_idp().split("\n")):
-			#count += 1
-			#if count in []
-			#print("%d. %s" % [count,line])
+		assert(false,"IDP - Error")
 	return std_out
 
 func call_async_inference(kb: KnowlegdeBase, inference_type: int, inf_path) -> void:

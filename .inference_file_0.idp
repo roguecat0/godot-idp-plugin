@@ -1,18 +1,20 @@
 vocabulary V {
-	type country := {Belguim, Germany, France}
+	type country := {Belgium, Germany, France}
 	type color := {Red, Blue, Green, Yellow}
 	Bordering : (country * country) -> Bool
 	ColourOf : (country) -> color
+	countries_red : () -> Int
 
 }
 theory T:V {
-	
+	ColourOf(Belgium) = Red.
+	#{ c in country: ColourOf(c) = Red } = countries_red().
 
 }
 structure S:V {
-	Bordering := {(Belguim, France), (Belguim, Germany), (Germany, France)}.
+	Bordering := {(Belgium, France), (Belgium, Germany), (Germany, France)}.
 
 }
 procedure main() {
-	pretty_print(model_expand(T,S,max=1))
+	pretty_print(maximize(T,S,term="countries_red()"))
 }

@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://cwg3k0vph11g7"]
+
+[ext_resource type="Script" path="res://survivors_like/scripts/weapon.gd" id="1_b7y22"]
+[ext_resource type="Texture2D" uid="uid://cq7diiy7fdmmq" path="res://survivors_like/assets/sprites/dungeonSprites_ v1.5/weapons_.png" id="1_iu1t3"]
+[ext_resource type="PackedScene" uid="uid://dd00p3qbqjkes" path="res://survivors_like/scenes/attack.tscn" id="2_xmeuk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f6b2n"]
+atlas = ExtResource("1_iu1t3")
+region = Rect2(12, 0, 12, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vsn1w"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f6b2n")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Weapon" type="Node2D"]
+script = ExtResource("1_b7y22")
+
+[node name="Attack" parent="." instance=ExtResource("2_xmeuk")]
+
+[node name="WeaponPivot" type="Marker2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="WeaponPivot"]
+position = Vector2(19, 0)
+rotation = 1.5708
+sprite_frames = SubResource("SpriteFrames_vsn1w")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

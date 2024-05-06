@@ -134,16 +134,16 @@ func add_definition(terms: Array=[]):
 	
 func parse_solutions(out_lines: Array, inference_type: int) -> void:
 	#TODO: fix bug, adds an empty string to predicates when nothing to add
-	if out_lines[0].begins_with("Traceback"):
-		print("IDP error occured, exiting parse function")
-		return
+	# if out_lines[0].begins_with("Traceback"):
+	# 	print("IDP error occured, exiting parse function")
+	# 	return
 
 	match inference_type:
 		IDP.PROPAGATE:
 			parse_propagation(out_lines)
 		_:
-			parse_expansion(out_lines)
-	print(inference_type, ": inf type is ")
+			parse_expansion(out_lines, IDP.EXPAND == inference_type)
+	# print(inference_type, ": inf type is ")
 	# finished_inference.emit(self, inference_type)
 	call_deferred("emit_signal", "finished_inference", self,inference_type)
 
@@ -182,16 +182,18 @@ func parse_propagation_line(line) -> void:
 			negative_propagates[symbol][domain].append(range_)
 	
 
-func parse_expansion(out_lines) -> void:
+func parse_expansion(out_lines, expansion) -> void:
 	if out_lines.front() == "No models.":
 		solvable = false
 		print("model not solvable")
 		return
 	var new_lines = "\n".join(out_lines).split("==========")
-	if len(new_lines) == 1:
+	if expansion:
+		new_lines = new_lines.slice(1)
+	if len(new_lines) == 0:
 		push_warning("no valid models")
 		return
-	new_lines = Array(new_lines.slice(1))
+	new_lines = Array(new_lines)
 	var models : Array = []
 	new_lines.map(func(group): models.append(Array(group.split("\n")).filter(func(x): return ":=" in x and not x.begins_with("//"))))
 	# models.append(out_lines)
