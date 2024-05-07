@@ -1,20 +1,18 @@
 vocabulary V {
-	type country := {Belgium, Germany, France}
-	type color := {Red, Blue, Green, Yellow}
-	Bordering : (country * country) -> Bool
-	ColourOf : (country) -> color
-	countries_red : () -> Int
+	type GreenSlime := {}
+	green_slime_hp : (GreenSlime) -> Int
+	green_slime_aggro : (GreenSlime) -> Bool
+	health_threshold : () -> Int
 
 }
 theory T:V {
-	ColourOf(Belgium) = Red.
-	#{ c in country: ColourOf(c) = Red } = countries_red().
+	!slime in GreenSlime: green_slime_hp(slime) =< health_threshold() <=> ~green_slime_aggro(slime).
 
 }
 structure S:V {
-	Bordering := {(Belgium, France), (Belgium, Germany), (Germany, France)}.
+	health_threshold := 2.
 
 }
 procedure main() {
-	pretty_print(maximize(T,S,term="countries_red()"))
+	pretty_print(model_expand(T,S,max=1))
 }
