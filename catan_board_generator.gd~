@@ -59,13 +59,13 @@ func fill_theory(kb: KnowlegdeBase) -> KnowlegdeBase:
 	var token_pips = kb.functions.token_pips
 	var Q = kb.types.Q
 	var R = kb.types.R
-	var base_each1 = ForEach.create([["q"],["r"]],[Q,R],Bool.base_(true))
-	var base_each2 = ForEach.create([["q1","q2"],["r1","r2"]],[Q,R],Bool.base_(true))
+	var base_each1 = Quantifier.create([["q"],["r"]],[Q,R],Bool.base_(true))
+	var base_each2 = Quantifier.create([["q1","q2"],["r1","r2"]],[Q,R],Bool.base_(true))
 	# desert always has zero tokens
 	var inner_rule = tile_token.apply(["q","r"]).eq(7).equivalent(
 		tile_type.apply(["q","r"]).eq("desert")
 	)
-	# kb.add_formula(ForEach.create("q",Q,ForEach.create("r",R,inner_rule).any()).any())
+	# kb.add_formula(Quantifier.create("q",Q,Quantifier.create("r",R,inner_rule).any()).any())
 	kb.add_formula(base_each1.copy().set_inner_expr(inner_rule).any())
 	# set legal number of occurrence per tile type
 	var tile_occurences = {"hills":3,"forest":4,"mountains":3,"fields":4,"pasture":4,"desert":1}
@@ -108,7 +108,7 @@ func fill_theory(kb: KnowlegdeBase) -> KnowlegdeBase:
 	if desert_center:
 		kb.add_formula(tile_type.apply([0,0]).eq("desert"))
 	if intersection_limit:
-		var base_each3 = ForEach.create([['q1','q2','q3'],['r1','r2','r3']],[Q,R],Bool.base_(true)).all()
+		var base_each3 = Quantifier.create([['q1','q2','q3'],['r1','r2','r3']],[Q,R],Bool.base_(true)).all()
 		var neighours3 = neighbour_t.and(neighbour.apply(['q1','r1','q3','r3'])).and(neighbour.apply(['q2','r2','q3','r3']))
 		var tokencount = (token_pips.apply([tile_token.apply(['q1','r1'])])
 			.add(token_pips.apply([tile_token.apply(['q2','r2'])]))

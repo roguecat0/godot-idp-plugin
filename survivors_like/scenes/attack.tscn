@@ -3,25 +3,15 @@
 [ext_resource type="Script" path="res://survivors_like/scripts/attack.gd" id="1_yf4g5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ex760"]
-size = Vector2(36, 10)
+size = Vector2(29, 10)
 
 [node name="Attack" type="Area2D"]
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_yf4g5")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-visible = false
-offset_left = 7.0
-offset_top = -5.0
-offset_right = 47.0
-offset_bottom = 35.0
-scale = Vector2(0.902783, 0.246218)
-color = Color(0.164706, 0.568627, 1, 0.533333)
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(25, 0)
+position = Vector2(21.5, 0)
 shape = SubResource("RectangleShape2D_ex760")
-disabled = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

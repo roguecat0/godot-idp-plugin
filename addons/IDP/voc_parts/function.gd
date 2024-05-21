@@ -11,7 +11,7 @@ func set_default(val):
 	interpretation.setd(val)
 	
 func unset_default():
-	interpretation.unset()
+	interpretation.unsetd()
 
 func to_structure_line() -> String:
 	var tmp = super()

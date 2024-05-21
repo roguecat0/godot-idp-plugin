@@ -22,7 +22,8 @@ func create_kb() -> KnowlegdeBase:
 	# types
 	var Q = kb.add_type("Q",range(-2,3),IDP.INT)
 	var R = kb.add_type("R",range(-2,3),IDP.INT)
-	var Tile = kb.add_type("Tile", ["hills","forest","mountains","fields","pasture","desert","none"])
+	var Tile = kb.add_type("Tile", 
+		["hills","forest","mountains","fields","pasture","desert","none"])
 	var Token = kb.add_type("Token",range(1,13),IDP.INT)
 	var Pips = kb.add_type("Pips",range(0,6),IDP.INT)
 	# functions	
@@ -35,6 +36,12 @@ func create_kb() -> KnowlegdeBase:
 				relevant.add([q,r])
 
 	var neighbour = kb.add_predicate("neighbour",[Q,R,Q,R])
+	var _token_pips = kb.add_function("token_pips",Token,Pips,
+	{
+		1:0, 2:1, 3:2, 4:3, 5:4, 6:5,
+		7:0, 8:5, 9:4, 10:3, 11:2, 12:1,	
+	})
+	return kb
 	# for q1 in Q.enums:
 	# 	for r1 in R.enums:
 	# 		for q2 in Q.enums:
@@ -45,12 +52,6 @@ func create_kb() -> KnowlegdeBase:
 	# 					continue
 	# 				if abs((q1+r1)-(q2+r2))<2:
 	# 					neighbour.add([q1,r1,q2,r2])
-	var _token_pips = kb.add_function("token_pips",Token,Pips,
-	{
-		1:0, 2:1, 3:2, 4:3, 5:4, 6:5,
-		7:0, 8:5, 9:4, 10:3, 11:2, 12:1,	
-	})
-	return kb
 
 func fill_theory(kb: KnowlegdeBase) -> KnowlegdeBase:
 	kb.formulas = []
@@ -63,14 +64,14 @@ func fill_theory(kb: KnowlegdeBase) -> KnowlegdeBase:
 	var token_pips = kb.symbols.token_pips
 	var Q = kb.types.Q
 	var R = kb.types.R
-	var base_each1 = ForEach.create([["q"],["r"]],[Q,R],Bool.base_(true))
-	var base_each2 = ForEach.create([["q1","q2"],["r1","r2"]],[Q,R],Bool.base_(true))
+	var base_each1 = Quantifier.create([["q"],["r"]],[Q,R],Bool.base_(true))
+	var base_each2 = Quantifier.create([["q1","q2"],["r1","r2"]],[Q,R],Bool.base_(true))
 	# desert always has zero tokens
 	var inner_rule = tile_token.apply(["q","r"]).eq(7).equivalent(
 		tile_type.apply(["q","r"]).eq("desert")
 	)
-	# kb.add_formula(ForEach.create("q",Q,ForEach.create("r",R,inner_rule).any()).any())
-	kb.add_formula(base_each1.copy().set_inner_expr(inner_rule).any())
+	# kb.add_formula(Quantifier.create("q",Q,Quantifier.create("r",R,inner_rule).any()).any())
+	kb.add_formula(base_each1.copy().set_inner_expr(inner_rule).all())
 	# set legal number of occurrence per tile type
 	var tile_occurences = {"hills":3,"forest":4,"mountains":3,"fields":4,"pasture":4,"desert":1}
 	for tile in tile_occurences.keys():
@@ -92,17 +93,9 @@ func fill_theory(kb: KnowlegdeBase) -> KnowlegdeBase:
 	kb.add_formula(base_each1.copy().set_inner_expr(irrelevant_type).all())
 	kb.add_formula(base_each1.copy().set_inner_expr(irrelevant_token).all())
 	# define neighbors
-	# var definition = []
 	var neighbour_t = neighbour.apply(['q1','r1','q2','r2'])
-	# var not_same = IDP.p_not(Integer.base_("q1").eq("q2").and_(Integer.base_("r1").eq("r2")))
-	# var distance = IDP.parenth(Integer.base_('q1').sub('q2').add('r1').sub('r2'))
-	# var relevant_cords = relevant.apply(['q1','r1']).and_(relevant.apply(['q2','r2']))
-	# definition.append(base_each2.copy().set_inner_expr(neighbour_t.defines(not_same)).all())
-	# definition.append(base_each2.copy().set_inner_expr(neighbour_t.defines(distance.between(-1,1,IDP.LTE,IDP.LTE))).all())
-	# definition.append(base_each2.copy().set_inner_expr(neighbour_t.defines(relevant_cords)).all())
 	var define_neighbors = " !q1, q2 in Q, r1, r2 in R: neighbour(q1, r1, q2, r2) <=> ~(q1 = q2 & r1 = r2) & -1 =< (q1 - q2) =< 1 & -1 =< (r1 - r2) =< 1 & relevant(q1, r1) & relevant(q2, r2)."
 	kb.add_undefined_line(define_neighbors,IDP.THEORY)
-	# kb.add_definition(definition)
 	# neighbors not same type option
 	if distinct_neighbor_tile:
 		var different_tile_type = tile_type.apply(['q1','r1']).neq(tile_type.apply(['q2','r2']))
@@ -117,7 +110,7 @@ func fill_theory(kb: KnowlegdeBase) -> KnowlegdeBase:
 	# limits intersection pips
 	if intersection_limit:
 		print("inter")
-		var base_each3 = ForEach.create([['q1','q2','q3'],['r1','r2','r3']],[Q,R],Bool.base_(true)).all()
+		var base_each3 = Quantifier.create([['q1','q2','q3'],['r1','r2','r3']],[Q,R],Bool.base_(true)).all()
 		var neighours3 = neighbour_t.and_(neighbour.apply(['q1','r1','q3','r3'])).and_(neighbour.apply(['q2','r2','q3','r3']))
 		var tokencount = (token_pips.apply([tile_token.apply(['q1','r1'])])
 			.add(token_pips.apply([tile_token.apply(['q2','r2'])]))
@@ -146,6 +139,9 @@ func _input(event: InputEvent) -> void:
 func _on_generate() -> void:
 	fill_theory(kb)
 	IDP.model_expand(kb,1)
+	for sol in kb.solutions[0]:
+		print(sol)
+	print(kb.parse_to_idp())
 	$HexMap.set_tiles(kb.solutions[0].tile_type.interpretation)
 	$HexMap.set_tokens(kb.solutions[0].tile_token.interpretation)
 

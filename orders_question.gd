@@ -33,7 +33,7 @@ func setup():
 		woodOrder.add(i,req_wood[i])
 		
 	# rules
-	var each_deliveries = ForEach.create("o",Orders,deliveries.apply("o"))
+	var each_deliveries = Quantifier.create("o",Orders,deliveries.apply("o"))
 	kb.add_formula(numDeliveries.apply().eq(each_deliveries.count()))
 	kb.add_formula(maxIron.apply().gte(each_deliveries.sum(ironOrder.apply("o"))))
 	kb.add_formula(maxWood.apply().gte(each_deliveries.sum(woodOrder.apply("o"))))

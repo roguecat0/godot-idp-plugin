@@ -32,7 +32,7 @@ func _input(event: InputEvent) -> void:
 				# 	set_cell(main_layer, pos_clicked, main_atlas_id, current_atlas_coords, 
 				# 			(current_tile_alt + 1) %  number_of_alts_for_clicked)
 
-func set_tiles(tiles):
+func set_tiles(tiles): # kb.solutions[0].tile_type.interpretation
 	for coord in tiles.keys():
 		var tile = tiles[coord]
 		if man_map_cords.get(coord) != null:

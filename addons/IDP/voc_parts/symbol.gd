@@ -18,6 +18,9 @@ func _init(named: String, domain_: Variant, range_: Variant, interpretation: Sym
 	self.range_ = _parse_custom_type(range_)
 	self.interpretation = interpretation
 	
+func unset():
+	interpretation.unset()
+	
 func add(key: Variant,val: Variant=true) -> void:
 	#TODO: check if same size
 	interpretation.add(key,val)

@@ -40,13 +40,13 @@ func _ready() -> void:
 	# var country_bordering_germany = Bordering.apply(["c", "Germany"])
 	# var counrty_color_is_green = ColourOf.apply("c").eq("Green")
 	# var if_bordering_then_green = country_bordering_germany.implies(counrty_color_is_green)
-	# var each_bordering_germany = ForEach.create("c", country, counrty_bordering_germany_is_green)
+	# var each_bordering_germany = Quantifier.create("c", country, counrty_bordering_germany_is_green)
 	# kb.add_formula(each_bordering_germany.all())
 
 	# # bordering countries have different colors
 	# var bordering_countries = Bordering.apply(["c1", "c2"])
 	# var different_colors = ColourOf.apply("c1").neq(ColourOf.apply("c2"))
-	# var each_country_pair = ForEach.create(["c1","c2"],country, bordering_countries.implies(different_colors))
+	# var each_country_pair = Quantifier.create(["c1","c2"],country, bordering_countries.implies(different_colors))
 	# kb.add_formula(each_country_pair.all())
 
 
@@ -59,7 +59,7 @@ func _ready() -> void:
 	# print(kb.negative_propagates)
 
 	var countries_red = kb.add_constant("countries_red", IDP.INT)
-	kb.add_formula(ForEach.create("c", country, ColourOf.apply("c").eq("Red")).count().eq(countries_red.apply()))
+	kb.add_formula(Quantifier.create("c", country, ColourOf.apply("c").eq("Red")).count().eq(countries_red.apply()))
 	IDP.maximize(kb, "countries_red()")
 	for sol in kb.solutions[0]:
 		print(sol)

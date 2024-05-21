@@ -1,6 +1,6 @@
 [gd_scene load_steps=17 format=3 uid="uid://bawu8hhgg5pq7"]
 
-[ext_resource type="Script" path="res://survivors_like/scripts/slime.gd" id="1_mywlt"]
+[ext_resource type="Script" path="res://survivors_like/scripts/green_slime.gd" id="1_rpbmo"]
 [ext_resource type="Texture2D" uid="uid://drdwqk4xtf0tr" path="res://survivors_like/assets/sprites/slime_green.png" id="2_mw38u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5us6j"]
@@ -119,7 +119,7 @@ position = Vector2(0, -12)
 collision_layer = 2
 collision_mask = 2
 motion_mode = 1
-script = ExtResource("1_mywlt")
+script = ExtResource("1_rpbmo")
 
 [node name="Greeny" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_8whlc")

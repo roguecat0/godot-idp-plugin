@@ -21,13 +21,13 @@ func _ready() -> void:
 	var term9 = term2.sub(term6)
 	var term10 = pp1.apply().and_(term8.eq(term8))
 	var d1 = kb.add_definition()
-	var term11 = ForEach.create(["x","y"],t1,Integer.create("x").eq("y")).count()
-	var term12 = ForEach.create("z",t1,Real.create("z").neq(2)).max(f3.apply(["z"]))
-	var inner_each = ForEach.create("c",Floats,Integer.create("a").add("b").eq("c")).any()
+	var term11 = Quantifier.create(["x","y"],t1,Integer.create("x").eq("y")).count()
+	var term12 = Quantifier.create("z",t1,Real.create("z").neq(2)).max(f3.apply(["z"]))
+	var inner_each = Quantifier.create("c",Floats,Integer.create("a").add("b").eq("c")).any()
 	var term13 = term6.between(1,1,IDP.GTE,IDP.GT)
-	# mutli foreach
-	var each1 = ForEach.create(["a","b"], "T",Bool.base_("lol"))
-	var each2 = ForEach.create([["a","b"],["c"]], [t1,"K"],Bool.base_("lol"))
+	# mutli Quantifier
+	var each1 = Quantifier.create(["a","b"], "T",Bool.base_("lol"))
+	var each2 = Quantifier.create([["a","b"],["c"]], [t1,"K"],Bool.base_("lol"))
 	each2.set_inner_expr(Bool.base_(true))
 
 	d1.add_formula(term3)

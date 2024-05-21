@@ -78,7 +78,7 @@ func parse_to_idp()-> String:
 		IDP.CALL:
 			return "%s(%s)" % [base,", ".join(children.map(func(child): return child.parse_to_idp()))]
 
-		# foreach
+		# Quantifier
 		IDP.EACH:
 			return ", ".join(range(len(children[0])).map(func(i):\
 				return "%s in %s" % [children[0][i],children[1][i]]))\
@@ -154,8 +154,8 @@ func get_type():
 		return Bool
 	if self is ArithTerm:
 		return ArithTerm
-	if self is ForEach:
-		return ForEach
+	if self is Quantifier:
+		return Quantifier
 	return Term
 
 func get_inner_expr():
@@ -166,8 +166,8 @@ func get_inner_expr():
 func set_inner_expr(term: Term):
 	if not operator in [IDP.ALL,IDP.ANY,IDP.EACH,IDP.COUNT]:
 		assert(false,"function should only be used on ALL, ANY, EACH, COUNT terms")
-	if not term is Bool and not term is ForEach:
-		assert(false,"only boolean and foreach terms are allowed")
+	if not term is Bool and not term is Quantifier:
+		assert(false,"only boolean and Quantifier terms are allowed")
 	children[0].set_inner_expr(term)
 	return self
 

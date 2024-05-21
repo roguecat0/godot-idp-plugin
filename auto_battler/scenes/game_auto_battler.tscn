@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dkbgp6de27dji"]
+
+[ext_resource type="Script" path="res://auto_battler/scripts/game_auto_battler.gd" id="1_yhqaf"]
+
+[node name="GameAutoBattler" type="Node2D"]
+script = ExtResource("1_yhqaf")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]

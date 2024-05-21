@@ -1,9 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://bp0hgb3altjn6"]
+[gd_scene load_steps=11 format=3 uid="uid://bp0hgb3altjn6"]
 
 [ext_resource type="Script" path="res://survivors_like/scripts/survivor_game.gd" id="1_jjhjh"]
 [ext_resource type="PackedScene" uid="uid://vjl6wcshjmim" path="res://survivors_like/scenes/player.tscn" id="1_p7omt"]
 [ext_resource type="Texture2D" uid="uid://cof1mfuv3u2va" path="res://survivors_like/assets/sprites/taiga/taiga_.png" id="2_pade3"]
 [ext_resource type="Script" path="res://survivors_like/scripts/game_manager.gd" id="4_enfll"]
+[ext_resource type="PackedScene" uid="uid://dy2g2fbqgkjv5" path="res://survivors_like/scenes/red_slime.tscn" id="5_gne18"]
+[ext_resource type="PackedScene" uid="uid://bawu8hhgg5pq7" path="res://survivors_like/scenes/green_slime.tscn" id="6_m6inb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3f11m"]
 texture = ExtResource("2_pade3")
@@ -441,6 +443,12 @@ position = Vector2(6.16464, -12.5697)
 rotation = -3.14159
 shape = SubResource("RectangleShape2D_gq0au")
 one_way_collision = true
+
+[node name="RedSlime" parent="." instance=ExtResource("5_gne18")]
+position = Vector2(689, 242)
+
+[node name="GreenSlime" parent="." instance=ExtResource("6_m6inb")]
+position = Vector2(441, 281)
 
 [connection signal="health_depleted" from="Player" to="." method="_on_player_health_depleted"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]

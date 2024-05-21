@@ -1,19 +1,19 @@
 extends Term
-class_name ForEach
+class_name Quantifier
 
 func get_type():
-	return ForEach
+	return Quantifier
 
 func neq(_other: Variant) -> Bool:
-	assert(false,"neq not implemented for ForEach")
+	assert(false,"neq not implemented for Quantifier")
 	return Bool.base_("")
 
 func eq(_other: Variant) -> Bool:
-	assert(false,"eq not implemented for ForEach")
+	assert(false,"eq not implemented for Quantifier")
 	return Bool.base_("")
 
 func parenth():
-	assert(false,"parenth not implemented for ForEach")
+	assert(false,"parenth not implemented for Quantifier")
 
 static func _parse_custom_type(val: Variant) -> String:
 	if val is String:
@@ -38,17 +38,17 @@ static func _parse_custom_type(val: Variant) -> String:
 		assert(false,"value is not a String, int or CustomType")
 		return ""
 
-static func create(variable: Variant, type: Variant, term: Term) -> ForEach:
+static func create(variable: Variant, type: Variant, term: Term) -> Quantifier:
 	var t = _convert_input_type(type)
 	var v = _convert_input_variable(variable)
 	if len(t) != len(v):
 		assert(false, "variable:%s len(%d) and type:%s len(%d) aren't matching inputs" % [
 			v,len(v),t,len(t)])
-	if not term is Bool and not term is ForEach:
-		assert(false,"only boolean and foreach terms are allowed")
+	if not term is Bool and not term is Quantifier:
+		assert(false,"only boolean and Quantifier terms are allowed")
 	print(v,", ",t)
-	return ForEach.new("",[v,t,term],IDP.EACH)
-	# list [", ".join()], list [" types"], Term (Bool, Foreach)
+	return Quantifier.new("",[v,t,term],IDP.EACH)
+	# list [", ".join()], list [" types"], Term (Bool, Quantifier)
 
 static func _convert_input_variable(variable) -> Array:
 	if variable is String:
@@ -97,8 +97,8 @@ func get_inner_expr():
 	return children[2]
 
 func set_inner_expr(term: Term):
-	if not term is Bool and not term is ForEach:
-		assert(false,"only boolean and foreach terms are allowed")
+	if not term is Bool and not term is Quantifier:
+		assert(false,"only boolean and Quantifier terms are allowed")
 	if children[2].operator in [IDP.ALL,IDP.ANY,IDP.EACH]:
 		children[2].set_inner_expr(term)
 		return self
@@ -106,8 +106,8 @@ func set_inner_expr(term: Term):
 	return self
 
 func set_expr(term: Term):
-	if not term is Bool and not term is ForEach:
-		assert(false,"only boolean and foreach terms are allowed")
+	if not term is Bool and not term is Quantifier:
+		assert(false,"only boolean and Quantifier terms are allowed")
 	children[2] = term
 	return self
 

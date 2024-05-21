@@ -1,0 +1,150 @@
+[gd_scene load_steps=18 format=3 uid="uid://dy2g2fbqgkjv5"]
+
+[ext_resource type="Script" path="res://survivors_like/scripts/red_slime.gd" id="1_ejute"]
+[ext_resource type="Texture2D" uid="uid://cmtrlxfyhyv10" path="res://survivors_like/assets/sprites/slime_purple.png" id="3_silnl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i457c"]
+atlas = ExtResource("3_silnl")
+region = Rect2(72, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_le2oj"]
+atlas = ExtResource("3_silnl")
+region = Rect2(48, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ibnb0"]
+atlas = ExtResource("3_silnl")
+region = Rect2(24, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oure7"]
+atlas = ExtResource("3_silnl")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yn64t"]
+atlas = ExtResource("3_silnl")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eggny"]
+atlas = ExtResource("3_silnl")
+region = Rect2(0, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lxo7g"]
+atlas = ExtResource("3_silnl")
+region = Rect2(24, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_say4t"]
+atlas = ExtResource("3_silnl")
+region = Rect2(48, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b3cu0"]
+atlas = ExtResource("3_silnl")
+region = Rect2(72, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5oyd6"]
+atlas = ExtResource("3_silnl")
+region = Rect2(0, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7jqto"]
+atlas = ExtResource("3_silnl")
+region = Rect2(24, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s4f2w"]
+atlas = ExtResource("3_silnl")
+region = Rect2(48, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h14db"]
+atlas = ExtResource("3_silnl")
+region = Rect2(72, 24, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8whlc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i457c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_le2oj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ibnb0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oure7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yn64t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oure7")
+}],
+"loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eggny")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lxo7g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_say4t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b3cu0")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5oyd6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7jqto")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s4f2w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h14db")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8g50g"]
+size = Vector2(14, 12)
+
+[node name="RedSlime" type="CharacterBody2D" groups=["red_slime"]]
+position = Vector2(0, -12)
+collision_layer = 2
+collision_mask = 2
+motion_mode = 1
+script = ExtResource("1_ejute")
+
+[node name="Greeny" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_8whlc")
+animation = &"death"
+autoplay = "run"
+frame_progress = 0.228295
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 6)
+shape = SubResource("RectangleShape2D_8g50g")
+
+[node name="BG" type="ColorRect" parent="."]
+offset_left = -10.0
+offset_top = -14.0
+offset_right = 10.0
+offset_bottom = -9.0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+
+[node name="Health" type="ColorRect" parent="."]
+offset_left = -10.0
+offset_top = -14.0
+offset_right = 10.0
+offset_bottom = -9.0
+color = Color(0.8, 0, 0.117647, 1)

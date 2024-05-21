@@ -107,7 +107,11 @@ func get_inference_output(file_path: String) -> Array:
 	std_out = Array(std_out[0].replace("\r","").split("\n"))
 	# TODO: add error output handeling
 	if std_out[0].begins_with("Traceback"):
+		
 		print("\n".join(std_out.slice(max(0,len(std_out)-20))))
+		var text = _load(file_path).split("\n")
+		for i in len(text):
+			print(i+1, ": ", text[i])
 		assert(false,"IDP - Error")
 	return std_out
 

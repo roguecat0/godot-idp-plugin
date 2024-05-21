@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfmxpcxispdor"]
+
+[ext_resource type="Script" path="res://auto_battler/scripts/constraint.gd" id="1_f0lx5"]
+
+[node name="Constraint" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_f0lx5")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 372.0
+offset_bottom = 40.0
+
+[node name="Categorie" type="OptionButton" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Type" type="OptionButton" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+allow_reselect = true
+
+[node name="Values" type="OptionButton" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+allow_reselect = true
+
+[node name="SliderValue" type="HSlider" parent="HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="item_selected" from="HBoxContainer/Categorie" to="." method="_on_categorie_item_selected"]
+[connection signal="item_selected" from="HBoxContainer/Type" to="." method="_on_type_item_selected"]
