@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cg138bjng4256"]
+[gd_scene load_steps=4 format=3 uid="uid://cg138bjng4256"]
 
 [ext_resource type="Script" path="res://auto_battler/scripts/rule_maker.gd" id="1_b7onn"]
 [ext_resource type="PackedScene" uid="uid://bfmxpcxispdor" path="res://auto_battler/scenes/constraint.tscn" id="2_dfi24"]
+[ext_resource type="PackedScene" uid="uid://dppsen6d4fwqg" path="res://auto_battler/scenes/rule.tscn" id="3_nypd3"]
 
 [node name="RuleMaker" type="Control"]
 layout_mode = 3
@@ -21,4 +22,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Constraint" parent="." instance=ExtResource("2_dfi24")]
+visible = false
+layout_mode = 1
+
+[node name="Rule" parent="." instance=ExtResource("3_nypd3")]
 layout_mode = 1

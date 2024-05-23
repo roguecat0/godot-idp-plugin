@@ -1,12 +1,63 @@
-[gd_scene load_steps=2 format=3 uid="uid://dppsen6d4fwqg"]
+[gd_scene load_steps=3 format=3 uid="uid://dppsen6d4fwqg"]
 
 [ext_resource type="Script" path="res://auto_battler/scripts/Rule.gd" id="1_hbpwn"]
+[ext_resource type="PackedScene" uid="uid://bfmxpcxispdor" path="res://auto_battler/scenes/constraint.tscn" id="2_qldl2"]
 
 [node name="Rule" type="Control"]
 layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 380.0
+grow_horizontal = 2
+script = ExtResource("1_hbpwn")
+constraint_scene = ExtResource("2_qldl2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_hbpwn")
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Rule 1"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Constraints" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Add" type="Button" parent="VBoxContainer/HBoxContainer/VBox"]
+layout_mode = 2
+text = "ADD"
+
+[node name="Action" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OrderSelectors" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Up" type="Button" parent="VBoxContainer/HBoxContainer/OrderSelectors"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "UP"
+
+[node name="Down" type="Button" parent="VBoxContainer/HBoxContainer/OrderSelectors"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "DOWN"
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBox/Add" to="." method="_on_add_pressed"]

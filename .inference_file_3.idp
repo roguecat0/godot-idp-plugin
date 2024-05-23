@@ -1,5 +1,5 @@
 vocabulary V {
-	type redSlime := {28, 29}
+	type redSlime := {21}
 	red_slime_hp : (redSlime) -> Int
 	red_slime_aggro : (redSlime) -> Bool
 	health_threshold : () -> Int
@@ -10,7 +10,7 @@ theory T:V {
 
 }
 structure S:V {
-	red_slime_hp := {28 -> 4, 29 -> 4}.
+	red_slime_hp := {21 -> 4}.
 	health_threshold := 2.
 
 }

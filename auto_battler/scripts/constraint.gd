@@ -2,6 +2,8 @@ extends Control
 
 var kb: KnowlegdeBase
 var category
+var value
+var complete: bool = false
 
 func _init() -> void:
 	pass
@@ -13,6 +15,7 @@ func setup(kb_: KnowlegdeBase):
 		if symbol == "unitAction" or "rule" in symbol:
 			continue
 		%Categorie.add_item(symbol)
+	complete = false
 		
 
 
@@ -35,6 +38,9 @@ func _on_categorie_item_selected(index:int) -> void:
 			%Type.add_item("is_not")
 		_:
 			assert(false, "(%d) is not in any implemented type" % category.range_base)
+	%Type.select(-1)
+	%Values.select(-1)
+	complete = false
 			
 
 func _on_type_item_selected(index: int) -> void:
@@ -54,4 +60,23 @@ func _on_type_item_selected(index: int) -> void:
 	else:
 		%Values.visible = false
 		%SliderValue.visible = true
+	%Values.select(-1)
+	complete = false
 
+
+
+func _on_values_item_selected(index):
+	if index == -1:
+		return
+	value = %Values.get_item_text(index)
+	complete = true
+
+
+func _on_slider_value_value_changed(value):
+	print("hello you %d", value)
+	self.value = value
+	complete = true
+
+
+func _on_delete_pressed():
+	queue_free()

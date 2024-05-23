@@ -6,6 +6,7 @@ var kb: KnowlegdeBase
 func _ready() -> void:
 	init_kb()
 	$Constraint.setup(kb)
+	$Rule.setup(kb)
 
 func init_kb():
 	kb = IDP.create_empty_kb()

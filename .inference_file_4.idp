@@ -1,5 +1,5 @@
 vocabulary V {
-	type GreenSlime := {27, 28, 29}
+	type GreenSlime := {21}
 	green_slime_hp : (GreenSlime) -> Int
 	green_slime_aggro : (GreenSlime) -> Bool
 	health_threshold : () -> Int
@@ -10,7 +10,7 @@ theory T:V {
 
 }
 structure S:V {
-	green_slime_hp := {27 -> 1, 28 -> 4, 29 -> 4}.
+	green_slime_hp := {21 -> 4}.
 	health_threshold := 2.
 
 }

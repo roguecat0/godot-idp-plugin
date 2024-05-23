@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://auto_battler/scripts/constraint.gd" id="1_f0lx5"]
 
 [node name="Constraint" type="Control"]
+custom_minimum_size = Vector2(0, 45)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,5 +40,12 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Delete" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Delete"
+
 [connection signal="item_selected" from="HBoxContainer/Categorie" to="." method="_on_categorie_item_selected"]
 [connection signal="item_selected" from="HBoxContainer/Type" to="." method="_on_type_item_selected"]
+[connection signal="item_selected" from="HBoxContainer/Values" to="." method="_on_values_item_selected"]
+[connection signal="value_changed" from="HBoxContainer/SliderValue" to="." method="_on_slider_value_value_changed"]
+[connection signal="pressed" from="HBoxContainer/Delete" to="." method="_on_delete_pressed"]
