@@ -54,4 +54,3 @@ size_flags_horizontal = 3
 text = "Start Game"
 
 [connection signal="pressed" from="VBoxContainer2/HBoxContainer/AddRule" to="." method="_on_add_rule_pressed"]
-[connection signal="pressed" from="VBoxContainer2/HBoxContainer/Game" to="." method="_on_game_pressed"]

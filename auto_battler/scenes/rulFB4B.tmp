@@ -41,8 +41,6 @@ grow_vertical = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Rule"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -56,6 +54,15 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Constraint" parent="VBoxContainer/HBoxContainer/VBox/Constraints" instance=ExtResource("2_qldl2")]
+layout_mode = 2
+
+[node name="Constraint2" parent="VBoxContainer/HBoxContainer/VBox/Constraints" instance=ExtResource("2_qldl2")]
+layout_mode = 2
+
+[node name="Constraint3" parent="VBoxContainer/HBoxContainer/VBox/Constraints" instance=ExtResource("2_qldl2")]
+layout_mode = 2
 
 [node name="Add" type="Button" parent="VBoxContainer/HBoxContainer/VBox"]
 layout_mode = 2
@@ -80,12 +87,6 @@ text = "UP"
 layout_mode = 2
 text = "DOWN"
 
-[node name="DEL" type="Button" parent="VBoxContainer/HBoxContainer/OrderSelectors"]
-layout_mode = 2
-text = "REMOVE"
-
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBox/Add" to="." method="_on_add_pressed"]
-[connection signal="item_selected" from="VBoxContainer/HBoxContainer/Action" to="." method="_on_action_item_selected"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/OrderSelectors/Up" to="." method="_on_up_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/OrderSelectors/Down" to="." method="_on_down_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/OrderSelectors/DEL" to="." method="_on_del_pressed"]

@@ -2,11 +2,10 @@ extends Control
 
 var kb: KnowlegdeBase
 var category
+var type_name
 var value
 var complete: bool = false
 
-func _init() -> void:
-	pass
 
 func setup(kb_: KnowlegdeBase):
 	kb = kb_
@@ -15,9 +14,8 @@ func setup(kb_: KnowlegdeBase):
 		if symbol == "unitAction" or "rule" in symbol:
 			continue
 		%Categorie.add_item(symbol)
+	%Categorie.select(-1)
 	complete = false
-		
-
 
 func _on_categorie_item_selected(index:int) -> void:
 	if index == -1:
@@ -48,7 +46,7 @@ func _on_type_item_selected(index: int) -> void:
 		return
 
 	%Values.clear()
-	var type_name = %Type.get_item_text(index)
+	type_name = %Type.get_item_text(index)
 
 	if "is" in type_name:
 		%Values.visible = true
@@ -80,3 +78,10 @@ func _on_slider_value_value_changed(value):
 
 func _on_delete_pressed():
 	queue_free()
+
+func export() -> Dictionary:
+	return {
+		"category": category,
+		"type": type_name,
+		"value": value
+	}
