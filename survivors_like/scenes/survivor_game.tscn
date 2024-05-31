@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://survivors_like/scripts/survivor_game.gd" id="1_jjhjh"]
 [ext_resource type="PackedScene" uid="uid://vjl6wcshjmim" path="res://survivors_like/scenes/player.tscn" id="1_p7omt"]
-[ext_resource type="Texture2D" uid="uid://cof1mfuv3u2va" path="res://auto_battler/assets/sprites/taiga/taiga_.png" id="2_pade3"]
+[ext_resource type="Texture2D" uid="uid://cof1mfuv3u2va" path="res://survivors_like/assets/sprites/taiga/taiga_.png" id="2_pade3"]
 [ext_resource type="Script" path="res://survivors_like/scripts/game_manager.gd" id="4_enfll"]
 [ext_resource type="PackedScene" uid="uid://dy2g2fbqgkjv5" path="res://survivors_like/scenes/red_slime.tscn" id="5_gne18"]
 [ext_resource type="PackedScene" uid="uid://bawu8hhgg5pq7" path="res://survivors_like/scenes/green_slime.tscn" id="6_m6inb"]

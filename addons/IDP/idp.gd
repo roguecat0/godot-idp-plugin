@@ -81,7 +81,7 @@ func _load(path: String) -> String:
 
 func execute(file_path: String) -> Array[String]:
 	var std_out: Array[String] = []
-	OS.execute("./.venv/Scripts/idp-engine.exe",[file_path],std_out,true)
+	OS.execute("./.venv/Scripts/idp-engine",[file_path],std_out,true)
 	return std_out
 	
 func create_kb_from_file(path: String) -> KnowlegdeBase:

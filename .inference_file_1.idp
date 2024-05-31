@@ -1,16 +1,16 @@
 vocabulary V {
-	type GreenSlime := {21}
-	green_slime_hp : (GreenSlime) -> Int
-	green_slime_aggro : (GreenSlime) -> Bool
+	type redSlime := {1, 2, 3}
+	red_slime_hp : (redSlime) -> Int
+	red_slime_aggro : (redSlime) -> Bool
 	health_threshold : () -> Int
 
 }
 theory T:V {
-	!slime in GreenSlime: green_slime_hp(slime) =< health_threshold() <=> ~green_slime_aggro(slime).
+	!slime in redSlime: red_slime_hp(slime) =< health_threshold() <=> ~red_slime_aggro(slime).
 
 }
 structure S:V {
-	green_slime_hp := {21 -> 4}.
+	red_slime_hp := {1 -> 2, 2 -> 4, 3 -> 4}.
 	health_threshold := 2.
 
 }
