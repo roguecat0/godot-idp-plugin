@@ -18,18 +18,18 @@ Godot-IDP is a plugin that integrates the symbolic AI engine IDP-Z3 into the God
     - Find `Godot-IDP` in the list and enable it.
 
 4. **Setup Python environment:**
-    - Navigate to your Godot project folder and create a virtual environment named `venv`:
+    - Navigate to your Godot project folder and create a virtual environment named `.venv`:
     ```bash
-    python -m venv venv
+    python -m venv .venv
     ```
     - Activate the virtual environment:
         - On Windows:
         ```bash
-        venv\Scripts\activate
+        .venv\Scripts\activate.bat
         ```
         - On macOS/Linux:
         ```bash
-        source venv/bin/activate
+        source .venv/bin/activate
         ```
     - Install the required Python packages by running:
     ```bash
