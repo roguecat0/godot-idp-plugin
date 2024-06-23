@@ -1,17 +1,35 @@
 vocabulary V {
-	type redSlime := {1, 2, 3}
-	red_slime_hp : (redSlime) -> Int
-	red_slime_aggro : (redSlime) -> Bool
-	health_threshold : () -> Int
+	type Unit := {13, 15, 19, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38}
+	type Color := {Red, Blue, Green}
+	type Action := {Farm, Rest, Fight}
+	unitHealth : (Unit) -> Int
+	unitAge : (Unit) -> Int
+	unitColor : (Unit) -> Color
+	unitAction : (Unit) -> Action
+	food : () -> Int
+	units : () -> Int
+	time : () -> Int
+	rule_0 : (Unit) -> Bool
+	rule_1 : (Unit) -> Bool
+	rule_2 : (Unit) -> Bool
 
 }
 theory T:V {
-	!slime in redSlime: red_slime_hp(slime) =< health_threshold() <=> ~red_slime_aggro(slime).
+	!u in Unit: rule_0(u) <=> true & unitColor(u) = Red.
+	!u in Unit: rule_1(u) <=> true & unitColor(u) = Blue.
+	!u in Unit: rule_2(u) <=> true & unitColor(u) = Green.
+	!u in Unit: unitAction(u) = Farm <= rule_0(u).
+	!u in Unit: unitAction(u) = Rest <= rule_1(u) & ~rule_0(u).
+	!u in Unit: unitAction(u) = Fight <= rule_2(u) & ~rule_0(u) & ~rule_1(u).
 
 }
 structure S:V {
-	red_slime_hp := {1 -> 2, 2 -> 4, 3 -> 4}.
-	health_threshold := 2.
+	unitHealth := {13 -> 10, 15 -> 10, 19 -> 50.4233830000014, 23 -> 10, 24 -> 42.298708000001, 25 -> 2.07892796666646, 27 -> 10, 28 -> 10, 29 -> 27.8992840000004, 30 -> 7.37316063333322, 31 -> 27.3743050000003, 32 -> 27.3743050000003, 33 -> 19.824607, 34 -> 9.07100938333329, 35 -> 10, 36 -> 9.71890013333332, 37 -> 10, 38 -> 9.71890013333332}.
+	unitAge := {13 -> 28, 15 -> 28, 19 -> 28, 23 -> 23, 24 -> 23, 25 -> 23, 27 -> 18, 28 -> 18, 29 -> 13, 30 -> 13, 31 -> 13, 32 -> 13, 33 -> 8, 34 -> 8, 35 -> 8, 36 -> 3, 37 -> 3, 38 -> 3}.
+	unitColor := {13 -> Red, 15 -> Red, 19 -> Blue, 23 -> Red, 24 -> Blue, 25 -> Green, 27 -> Red, 28 -> Red, 29 -> Blue, 30 -> Green, 31 -> Blue, 32 -> Blue, 33 -> Blue, 34 -> Green, 35 -> Red, 36 -> Green, 37 -> Red, 38 -> Green}.
+	food := 24.
+	units := 18.
+	time := 28.
 
 }
 procedure main() {

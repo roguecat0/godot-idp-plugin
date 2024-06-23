@@ -15,12 +15,12 @@ func unset_default():
 
 func to_structure_line() -> String:
 	var tmp = super()
-	print(tmp)
+
 	if partially_interpreted:
 		print("clean partial")
 		return tmp.replace(":=", ">>")
 	if not interpretation.function_with_default:
-		print("no defaults")
+		pass
 	if interpretation.interpreted:
 		print("interpreded")
 		print(domain_size, ", domain :::: ", len(get_interpretation().keys()) )

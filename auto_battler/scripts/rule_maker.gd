@@ -15,10 +15,10 @@ var constraint_match = {
 signal player_config(kb_)
 
 func _ready() -> void:
-	init_kb()
+	kb = init_kb()
 
 func init_kb():
-	kb = IDP.create_empty_kb()
+	var kb = IDP.create_empty_kb()
 	var Unit: CustomType = kb.add_type("Unit", [], IDP.INT)
 	var Color: CustomType = kb.add_type("Color", ["Red", "Blue", "Green"], IDP.STRING)
 
@@ -33,6 +33,7 @@ func init_kb():
 	var food: Constant = kb.add_constant("food", IDP.INT)
 	var units: Constant = kb.add_constant("units", IDP.INT)
 	var time: Constant = kb.add_constant("time", IDP.INT)
+	return kb
 
 func _on_add_rule_pressed() -> void:
 	var rule = rule_scene.instantiate()
@@ -56,6 +57,8 @@ func _on_game_pressed() -> void:
 	player_config.emit(kb)
 
 func fill_kb(exports):
+	
+	print(exports)
 	kb.formulas = []
 	var Unit: CustomType = kb.types.Unit
 	var unitAction: Function = kb.symbols.unitAction
@@ -78,7 +81,7 @@ func fill_kb(exports):
 				type_builder_match(category_apply,constraint.type,constraint.value)
 			)
 		constraint_formulas.append(Quantifier.create("u", Unit, build_constraint).all())
-		var build_action_assign = unitAction.apply("u").eq(rule_ex.action).equivalent(rule_apply)
+		var build_action_assign = unitAction.apply("u").eq(rule_ex.action).rev_implies(rule_apply)
 		for prev_rule in rules_apply:
 			build_action_assign = build_action_assign.and_(prev_rule.not_())
 		order_formulas.append(Quantifier.create("u", Unit, build_action_assign).all())
@@ -87,11 +90,10 @@ func fill_kb(exports):
 
 	constraint_formulas.map(func(x): kb.add_formula(x))
 	order_formulas.map(func(x): kb.add_formula(x))
+	
+func reset_ui():
+	%Rules.get_children().map(func(x): x.queue_free())
 		
-
-			
-			
-			
 func type_builder_match(term, type_name, other):
 	match type_name:
 		"is":

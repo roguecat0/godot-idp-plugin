@@ -224,7 +224,6 @@ func parse_model_functions(model: Array) -> Dictionary:
 	var model_solutions = {}
 	for line in model:
 		var res = parse_function_line(line)
-		print(res, " ", res.named)
 		model_solutions[res.named] = res
 	return model_solutions
 	

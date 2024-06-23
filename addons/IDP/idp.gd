@@ -41,8 +41,6 @@ func _add_active_inference():
 	inferences_counter = inferences_counter + 1
 	print("active: ", active_inferences, ", counter: ", inferences_counter)
 
-	
-
 func _handel_async_inference_request(kb, fodot_code, infr_type):
 	if active_inferences >= max_threads:
 		inference_queue.append({"code":fodot_code, "kb":kb, "type":infr_type})
@@ -103,7 +101,7 @@ func _setup_inference_str(kb: KnowlegdeBase,main_block:String) -> String:
 	
 func get_inference_output(file_path: String) -> Array:
 	var std_out: Array = execute(file_path)
-	print(std_out[0].replace("\r",""))
+	#print(std_out[0].replace("\r",""))
 	std_out = Array(std_out[0].replace("\r","").split("\n"))
 	# TODO: add error output handeling
 	if std_out[0].begins_with("Traceback"):
@@ -123,7 +121,7 @@ func call_async_inference(kb: KnowlegdeBase, inference_type: int, inf_path) -> v
 func _receive_inference_output(std_out, kb, inference_type) -> void:
 	print("inference finished.. ", inference_type, ", curr_inferences: ", active_inferences)
 	active_inferences = active_inferences - 1
-	print("after inferences: ", active_inferences)
+	print("active inferences: ", active_inferences)
 	if len(inference_queue) > 0:
 		var inference = inference_queue.pop_front()
 		print("new inference started.. ", inference.type)
@@ -154,7 +152,6 @@ procedure main() {
 }
 """ % max_
 	var fodot_code = _setup_inference_str(kb, main_block)
-	print(main_block)
 	return fodot_code
 	
 func minimize(kb: KnowlegdeBase,term) -> KnowlegdeBase:

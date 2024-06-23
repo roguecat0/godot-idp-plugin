@@ -74,6 +74,7 @@ func update_kb_green_from_gameworld() -> void:
 	var GreenSlime: CustomType = kb_green_slimes.types.GreenSlime
 	GreenSlime.clear_enumeration()
 	kb_green_slimes.symbols.green_slime_hp.unset()
+	
 	for green_slime in green_slimes:
 		GreenSlime.add_enum(green_slime.id)
 		kb_green_slimes.symbols.green_slime_hp.add(green_slime.id,green_slime.health)
