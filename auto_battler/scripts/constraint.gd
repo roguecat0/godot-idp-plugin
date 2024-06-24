@@ -23,7 +23,7 @@ func _on_categorie_item_selected(index:int) -> void:
 	%Type.clear()
 	%Values.clear()
 	%Values.visible = true
-	%SliderValue.visible = false
+	%Slider.visible = false
 	var symbol_name = %Categorie.get_item_text(index)
 	category = kb.symbols[symbol_name]
 	print(category.range_base)
@@ -50,14 +50,14 @@ func _on_type_item_selected(index: int) -> void:
 
 	if "is" in type_name:
 		%Values.visible = true
-		%SliderValue.visible = false
+		%Slider.visible = false
 		print(category.range_)
 		for val in kb.types[category.range_].enums:
 			print(val)
 			%Values.add_item(val)
 	else:
 		%Values.visible = false
-		%SliderValue.visible = true
+		%Slider.visible = true
 	%Values.select(-1)
 	complete = false
 
@@ -71,7 +71,7 @@ func _on_values_item_selected(index):
 
 
 func _on_slider_value_value_changed(value):
-	print("hello you %d", value)
+	$HBoxContainer/Slider/Label.text = str(value)
 	self.value = value
 	complete = true
 

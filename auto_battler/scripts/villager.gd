@@ -23,7 +23,7 @@ static var next_id = 0
 
 
 # attributes
-const regen_rate = [1.5,1.5,1.5]
+const regen_rate = [1.5,1,0.5]
 const farm_rate = [1.5,1,1]
 const attack_rate = [1,1.5,0.5]
 const speed = [80.0,60.0,40.0]
@@ -57,15 +57,15 @@ func setup(color_, state_, player_) -> void:
 		_: assert(false, color + ", not in possible colors")
 		
 func age_bracket():
-	return age/10
+	return min(2,age/10)
 		
 func age_up():
 	age += 1
-	if age >= MAX_AGE:
+	if age >= MAX_AGE and randi() % 2 == 0:
 		die()
 	
 func regenerate(delta: float):
-	health = max(MAX_HP, health + delta*regen_rate[age_bracket()])
+	health = min(MAX_HP, health + delta*regen_rate[age_bracket()])
 	
 func farm(delta: float):
 	return farm_rate[age_bracket()] * delta
@@ -121,7 +121,6 @@ func animation_handler(direction: Vector2):
 		$Anim.play("run_up")
 	
 func die():
-	#print("DIED!")
 	died.emit(id)
 	queue_free()
 		

@@ -39,7 +39,7 @@ func _get_inferences_file():
 func _add_active_inference():
 	active_inferences = active_inferences + 1
 	inferences_counter = inferences_counter + 1
-	print("active: ", active_inferences, ", counter: ", inferences_counter)
+	#print("active: ", active_inferences, ", counter: ", inferences_counter)
 
 func _handel_async_inference_request(kb, fodot_code, infr_type):
 	if active_inferences >= max_threads:
@@ -114,17 +114,17 @@ func get_inference_output(file_path: String) -> Array:
 	return std_out
 
 func call_async_inference(kb: KnowlegdeBase, inference_type: int, inf_path) -> void:
-	print("called inf: ", inference_type, ", on kb: ", kb.id ,", with path: ", inf_path)
+	#print("called inf: ", inference_type, ", on kb: ", kb.id ,", with path: ", inf_path)
 	var std_out = get_inference_output(inf_path)
 	call_deferred("emit_signal", "inference_done", std_out,kb,inference_type)
 
 func _receive_inference_output(std_out, kb, inference_type) -> void:
-	print("inference finished.. ", inference_type, ", curr_inferences: ", active_inferences)
+	#print("inference finished.. ", inference_type, ", curr_inferences: ", active_inferences)
 	active_inferences = active_inferences - 1
-	print("active inferences: ", active_inferences)
+	#print("active inferences: ", active_inferences)
 	if len(inference_queue) > 0:
 		var inference = inference_queue.pop_front()
-		print("new inference started.. ", inference.type)
+		#print("new inference started.. ", inference.type)
 		var inf_path = _get_inferences_file()
 		_add_active_inference()
 		_save(inf_path,inference.code)
@@ -141,7 +141,6 @@ func model_expand(kb: KnowlegdeBase, max_: int=10) -> KnowlegdeBase:
 	var fodot_code = _setup_model_expand(kb, max_)
 	_save(IDP_MAIN_PATH,fodot_code)
 	var std_out: Array = get_inference_output(IDP_MAIN_PATH)
-	print(std_out)
 	kb.parse_solutions(std_out,EXPAND)
 	return kb
 

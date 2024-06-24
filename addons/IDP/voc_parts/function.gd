@@ -17,18 +17,19 @@ func to_structure_line() -> String:
 	var tmp = super()
 
 	if partially_interpreted:
-		print("clean partial")
+		#print("clean partial")
 		return tmp.replace(":=", ">>")
 	if not interpretation.function_with_default:
 		pass
 	if interpretation.interpreted:
-		print("interpreded")
-		print(domain_size, ", domain :::: ", len(get_interpretation().keys()) )
+		pass
+		#print("interpreded")
+		#print(domain_size, ", domain :::: ", len(get_interpretation().keys()) )
 	if interpretation.interpreted and not interpretation.function_with_default and domain_size > len(get_interpretation().keys()):
-		print("error instance")
+		#print("error instance")
 		var error_msg = """interpretation %s, does not cover full domain of function %s(%s)""" % [get_interpretation(),named,domain]
 		if IDP.force_partial_interpretation:
-			print("forced partial")
+			#print("forced partial")
 			var extra = "\nfunction will be forcefully partially interprated, stop this behavior disable_forcefull_partial_interpretation()"
 			error_msg += extra
 		push_warning(error_msg)

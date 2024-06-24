@@ -1,5 +1,5 @@
 vocabulary V {
-	type Unit := {13, 15, 19, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38}
+	type Unit := {4, 6, 10, 12}
 	type Color := {Red, Blue, Green}
 	type Action := {Farm, Rest, Fight}
 	unitHealth : (Unit) -> Int
@@ -9,27 +9,28 @@ vocabulary V {
 	food : () -> Int
 	units : () -> Int
 	time : () -> Int
-	rule_0 : (Unit) -> Bool
-	rule_1 : (Unit) -> Bool
-	rule_2 : (Unit) -> Bool
+rule_0 : (Unit) -> Bool
+rule_1 : (Unit) -> Bool
+rule_2 : (Unit) -> Bool
 
 }
 theory T:V {
+	
 	!u in Unit: rule_0(u) <=> true & unitColor(u) = Red.
 	!u in Unit: rule_1(u) <=> true & unitColor(u) = Blue.
 	!u in Unit: rule_2(u) <=> true & unitColor(u) = Green.
-	!u in Unit: unitAction(u) = Farm <= rule_0(u).
-	!u in Unit: unitAction(u) = Rest <= rule_1(u) & ~rule_0(u).
-	!u in Unit: unitAction(u) = Fight <= rule_2(u) & ~rule_0(u) & ~rule_1(u).
+	!u in Unit: unitAction(u) = Fight <= rule_0(u).
+	!u in Unit: unitAction(u) = Farm <= rule_1(u) & ~rule_0(u).
+	!u in Unit: unitAction(u) = Rest <= rule_2(u) & ~rule_0(u) & ~rule_1(u).
 
 }
 structure S:V {
-	unitHealth := {13 -> 10, 15 -> 10, 19 -> 50.9733610000014, 23 -> 10, 24 -> 42.848686000001, 25 -> 2.04226276666646, 27 -> 10, 28 -> 10, 29 -> 28.4492620000004, 30 -> 7.33649543333322, 31 -> 27.9242830000004, 32 -> 27.9242830000004, 33 -> 20.374585, 34 -> 9.03434418333329, 35 -> 10, 36 -> 9.68223493333332, 37 -> 10, 38 -> 9.68223493333332}.
-	unitAge := {13 -> 28, 15 -> 28, 19 -> 28, 23 -> 23, 24 -> 23, 25 -> 23, 27 -> 18, 28 -> 18, 29 -> 13, 30 -> 13, 31 -> 13, 32 -> 13, 33 -> 8, 34 -> 8, 35 -> 8, 36 -> 3, 37 -> 3, 38 -> 3}.
-	unitColor := {13 -> Red, 15 -> Red, 19 -> Blue, 23 -> Red, 24 -> Blue, 25 -> Green, 27 -> Red, 28 -> Red, 29 -> Blue, 30 -> Green, 31 -> Blue, 32 -> Blue, 33 -> Blue, 34 -> Green, 35 -> Red, 36 -> Green, 37 -> Red, 38 -> Green}.
-	food := 27.
-	units := 18.
-	time := 28.
+	unitHealth := {4 -> 10, 6 -> 10, 10 -> 10, 12 -> 10}.
+	unitAge := {4 -> 4, 6 -> 4, 10 -> 4, 12 -> 4}.
+	unitColor := {4 -> Green, 6 -> Blue, 10 -> Green, 12 -> Blue}.
+	food := 14.
+	units := 4.
+	time := 4.
 
 }
 procedure main() {

@@ -42,9 +42,9 @@ const enemy_behavior: String = "\
 	!u in Unit: rule_0(u) <=> true & unitColor(u) = Red.
 	!u in Unit: rule_1(u) <=> true & unitColor(u) = Blue.
 	!u in Unit: rule_2(u) <=> true & unitColor(u) = Green.
-	!u in Unit: unitAction(u) = Fight <=> rule_0(u).
-	!u in Unit: unitAction(u) = Farm <=> rule_1(u) & ~rule_0(u).
-	!u in Unit: unitAction(u) = Rest <=> rule_2(u) & ~rule_0(u) & ~rule_1(u).
+	!u in Unit: unitAction(u) = Fight <= rule_0(u).
+	!u in Unit: unitAction(u) = Farm <= rule_1(u) & ~rule_0(u).
+	!u in Unit: unitAction(u) = Rest <= rule_2(u) & ~rule_0(u) & ~rule_1(u).
 "
 
 
@@ -69,11 +69,11 @@ func _process(delta: float) -> void:
 	update_gui()
 		
 func update_gui():
-	$UI/Food1.text = "Food: %.2f" % player_data.food
-	$UI/Food2.text = "Food: %.2f" % enemy_data.food
-	$UI/Villagers1.text = "villagers: %d" % len(player_data.villagers)
-	$UI/Villagers2.text = "villagers: %d" % len(enemy_data.villagers)
-	$UI/Time.text = "Time: %d" % time
+	$UI/Panel/Food1.text = "%.1f" % player_data.food
+	$UI/Panel2/Food2.text = "%.1f" % enemy_data.food
+	$UI/Panel3/Villagers1.text = "%d" % len(player_data.villagers)
+	$UI/Panel4/Villagers2.text = "%d" % len(enemy_data.villagers)
+	$UI/Panel5/Time.text = "%d" % time
 	
 func villagers_state_handler(data, areas, delta):
 	var villagers = data.villagers
@@ -142,9 +142,11 @@ func get_position_in_area(area_rect: Rect2, rows, cols, idx):
 	 Vector2(area_rect.size.x*((2.0*col+1.0)/(2*cols)), area_rect.size.y*((2.0*row+1.0)/(2*rows)))
 
 func begin_battle():
-	for i in range(5):
-		spawn_villager(true)
-		spawn_villager(false)
+	var colors = ["Red", "Green", "Blue"]
+	for i in range(6):
+		var color = colors[i % 3]
+		spawn_villager(true, null, color)
+		spawn_villager(false, null, color)
 	$DayTimer.start()
 	game_running = true
 		
@@ -161,7 +163,6 @@ func random_shuffle_villager_state(player=true):
 
 func _on_rule_maker_player_config(kb_) -> void:
 	#return
-	print("getting here")
 	kb = kb_
 	$CanvasLayer.visible = false
 	begin_battle()
@@ -169,21 +170,25 @@ func _on_rule_maker_player_config(kb_) -> void:
 
 func start_idp_loop():
 	kb2 = rule_maker.init_kb()
+	Array(enemy_behavior.split("\n")).map(func(l): kb2.add_undefined_line(l, IDP.THEORY))
+	Array(enemy_rules.split("\n")).map(func(l): kb2.add_undefined_line(l, IDP.VOCABULARY))
+	
 	kb.finished_inference.connect(expand_loop)
 	kb2.finished_inference.connect(expand_loop)
 	
 	update_kb_villagers(kb,true)
 	print(kb.parse_to_idp())
-	print(player_data.villagers)
-	print(enemy_data.villagers)
+	#print(player_data.villagers)
+	#print(enemy_data.villagers)
 	IDP.model_expand_async(kb,1)
 	
-	#update_kb_villagers(kb2,false)
-	#IDP.model_expand_async(kb2,1)
+	update_kb_villagers(kb2,false)
+	IDP.model_expand_async(kb2,1)
 
 func end_of_day():
 	var datas = [player_data, enemy_data]
-	print("team 1 ( food: %d, villagers: %d, fighters: %d), team 2 ( food: %d, villagers: %d, fighters: %d), " % [
+	
+	print("\nteam 1 ( food: %d, villagers: %d, fighters: %d), team 2 ( food: %d, villagers: %d, fighters: %d), " % [
 		player_data.food, len(player_data.villagers), len(player_data.fighters),
 		enemy_data.food, len(enemy_data.villagers), len(enemy_data.fighters),
 	])
@@ -203,9 +208,23 @@ func end_of_day():
 		var other_data = datas[i-1]
 		data.food -= len(data.villagers)
 		if data.food < 0:
-			var damage = min(200, len(data.villagers)*abs(data.food))
+			
+			var damage = abs(data.food)*3
 			print("team %d: takes %.2f damage" % [i+1, damage])
-			data.villagers.map(func(v): v.take_damage(damage))
+			var tmp: Array = data.villagers
+			tmp.sort_custom(func(a,b): return a.age > b.age)
+			var len_tmp = len(tmp)
+			for j in range(len_tmp):
+				
+				if damage <= 0:
+					break
+				var v = tmp[j]
+				var health = v.health
+				print("villager%d: takes %.2f damage, %s" % [v.id, min(health,damage), 
+				"lives" if health > damage else "dies"])
+				v.take_damage(damage)
+				damage -= health
+				
 		else:
 			var new_spawns = min(int(data.food) / 4, 500)
 			print("team %d: spawns %d" % [i+1, new_spawns])
@@ -214,7 +233,7 @@ func end_of_day():
 	
 func _on_day_timer_timeout() -> void:
 	time += 1
-	random_shuffle_villager_state(false)
+	#random_shuffle_villager_state(false)
 	#random_shuffle_villager_state(randi() % 2 == 0)
 	
 	player_data.villagers.map(func(v): v.age_up())
@@ -222,8 +241,8 @@ func _on_day_timer_timeout() -> void:
 	if time % 5 == 0:
 		end_of_day()
 		
-func spawn_villager(player=true, curr_state=null):
-	var color = ["Red", "Green", "Blue"][randi() % 3]
+func spawn_villager(player=true, curr_state=null, color=null):
+	color = ["Red", "Green", "Blue"][randi() % 3] if color == null else color
 	
 	if curr_state == null:
 		curr_state = player_areas.keys()[randi() % len(player_areas.keys())]
@@ -246,7 +265,6 @@ func remove_villager(id: int):
 		return x.id != id)
 	enemy_data.villagers = enemy_data.villagers.filter(func(x): 
 		return x.id != id)
-	
 	if len(player_data.villagers) == 0 or len(enemy_data.villagers) == 0:
 		end_game()
 		
@@ -281,9 +299,6 @@ func reset_map():
 		"fighters": [],
 	}
 	tmp.map(func(v): v.queue_free())
-	print("Freed")
-	print(player_data.villagers)
-	print(enemy_data.villagers)
 		
 	
 func update_villager_states(kb, player):

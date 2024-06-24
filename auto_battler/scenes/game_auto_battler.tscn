@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://dkbgp6de27dji"]
+[gd_scene load_steps=32 format=3 uid="uid://dkbgp6de27dji"]
 
 [ext_resource type="Script" path="res://auto_battler/scripts/game_auto_battler.gd" id="1_yhqaf"]
 [ext_resource type="PackedScene" uid="uid://cg138bjng4256" path="res://auto_battler/scenes/rule_maker.tscn" id="2_tlr2t"]
@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://cf07lvvy6e032" path="res://auto_battler/assets/Sprout Lands - Sprites - Basic pack/Objects/Basic_Furniture.png" id="6_i5aqe"]
 [ext_resource type="Texture2D" uid="uid://dn53gbhi2gl4o" path="res://auto_battler/assets/Sprout Lands - Sprites - Basic pack/Objects/Basic_Grass_Biom_things.png" id="7_i3gm6"]
 [ext_resource type="Texture2D" uid="uid://dvjq70lq273po" path="res://auto_battler/assets/Sprout Lands - Sprites - Basic pack/Objects/Basic_Plants.png" id="8_wtof8"]
+[ext_resource type="FontFile" uid="uid://clayajanqyp2l" path="res://auto_battler/assets/fonts/PixelOperator8.ttf" id="10_nk3u4"]
+[ext_resource type="Texture2D" uid="uid://cyur5xvjkmgdq" path="res://auto_battler/assets/Sprout Lands - Sprites - Basic pack/Characters/Basic Charakter Spritesheet.png" id="11_43bhp"]
 [ext_resource type="PackedScene" uid="uid://op7ocotpmee2" path="res://auto_battler/scenes/villager.tscn" id="11_lkql5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kv1wy"]
@@ -1058,6 +1060,26 @@ size = Vector2(1367.72, 1102.73)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dq1ju"]
 size = Vector2(1358.67, 1098)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0a8k6"]
+bg_color = Color(0.34902, 0.623529, 0.866667, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.203922, 0.466667, 0.686275, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="Theme" id="Theme_1mxyd"]
+Label/colors/font_outline_color = Color(0, 0, 0, 1)
+Label/constants/outline_size = 8
+Label/font_sizes/font_size = 24
+Label/fonts/font = ExtResource("10_nk3u4")
+Panel/styles/panel = SubResource("StyleBoxFlat_0a8k6")
+
 [node name="GameAutoBattler" type="Node2D"]
 script = ExtResource("1_yhqaf")
 villager_scene = ExtResource("11_lkql5")
@@ -1126,7 +1148,7 @@ position = Vector2(9911.29, 3904.95)
 shape = SubResource("RectangleShape2D_dq1ju")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(456, 271)
+position = Vector2(456, 255)
 zoom = Vector2(1.5, 1.5)
 
 [node name="DayTimer" type="Timer" parent="."]
@@ -1138,46 +1160,117 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_1mxyd")
 
-[node name="Food1" type="Label" parent="UI"]
+[node name="Panel" type="Panel" parent="UI"]
 layout_mode = 0
-offset_left = 88.0
-offset_top = 66.0
-offset_right = 128.0
-offset_bottom = 89.0
-text = "Food: 0"
+offset_left = 80.0
+offset_top = 49.0
+offset_right = 233.0
+offset_bottom = 99.0
 
-[node name="Food2" type="Label" parent="UI"]
+[node name="Food1" type="Label" parent="UI/Panel"]
 layout_mode = 0
-offset_left = 637.0
-offset_top = 67.0
-offset_right = 693.0
-offset_bottom = 90.0
-text = "Food: 0"
+offset_left = 61.0
+offset_top = 16.0
+offset_right = 94.0
+offset_bottom = 50.0
+text = "0"
 
-[node name="Villagers1" type="Label" parent="UI"]
-layout_mode = 0
-offset_left = 187.0
-offset_top = 66.0
-offset_right = 271.0
-offset_bottom = 89.0
-text = "Villagers: 0"
+[node name="BasicPlants" type="Sprite2D" parent="UI/Panel"]
+position = Vector2(27, 24)
+scale = Vector2(3.2, 2.86667)
+texture = ExtResource("8_wtof8")
+region_enabled = true
+region_rect = Rect2(80, 16, 16, 16)
 
-[node name="Villagers2" type="Label" parent="UI"]
+[node name="Panel2" type="Panel" parent="UI"]
 layout_mode = 0
-offset_left = 731.0
-offset_top = 67.0
-offset_right = 815.0
-offset_bottom = 90.0
-text = "Villagers: 0"
+offset_left = 546.0
+offset_top = 50.0
+offset_right = 704.0
+offset_bottom = 100.0
 
-[node name="Time" type="Label" parent="UI"]
+[node name="Food2" type="Label" parent="UI/Panel2"]
 layout_mode = 0
-offset_left = 444.0
-offset_top = 71.0
-offset_right = 484.0
-offset_bottom = 94.0
-text = "Time: 0"
+offset_left = 61.0
+offset_top = 16.0
+offset_right = 94.0
+offset_bottom = 50.0
+text = "0"
+
+[node name="BasicPlants" type="Sprite2D" parent="UI/Panel2"]
+position = Vector2(27, 24)
+scale = Vector2(3.2, 2.86667)
+texture = ExtResource("8_wtof8")
+region_enabled = true
+region_rect = Rect2(80, 0, 16, 16)
+
+[node name="Panel3" type="Panel" parent="UI"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 49.0
+offset_right = 362.0
+offset_bottom = 99.0
+
+[node name="Villagers1" type="Label" parent="UI/Panel3"]
+layout_mode = 0
+offset_left = 61.0
+offset_top = 16.0
+offset_right = 94.0
+offset_bottom = 50.0
+text = "0"
+
+[node name="BasicPlants" type="Sprite2D" parent="UI/Panel3"]
+position = Vector2(27, 24)
+scale = Vector2(3.2, 2.86667)
+texture = ExtResource("11_43bhp")
+region_enabled = true
+region_rect = Rect2(16, 16, 16, 16)
+
+[node name="Panel5" type="Panel" parent="UI"]
+layout_mode = 0
+offset_left = 395.0
+offset_top = 49.0
+offset_right = 509.0
+offset_bottom = 99.0
+
+[node name="Time" type="Label" parent="UI/Panel5"]
+layout_mode = 0
+offset_left = 61.0
+offset_top = 16.0
+offset_right = 94.0
+offset_bottom = 50.0
+text = "0"
+
+[node name="BasicPlants" type="Sprite2D" parent="UI/Panel5"]
+position = Vector2(27, 24)
+scale = Vector2(3.2, 2.86667)
+texture = ExtResource("6_i5aqe")
+region_enabled = true
+region_rect = Rect2(96, 48, 16, 16)
+
+[node name="Panel4" type="Panel" parent="UI"]
+layout_mode = 0
+offset_left = 717.0
+offset_top = 50.0
+offset_right = 831.0
+offset_bottom = 100.0
+
+[node name="Villagers2" type="Label" parent="UI/Panel4"]
+layout_mode = 0
+offset_left = 61.0
+offset_top = 16.0
+offset_right = 94.0
+offset_bottom = 50.0
+text = "0"
+
+[node name="BasicPlants" type="Sprite2D" parent="UI/Panel4"]
+position = Vector2(27, 24)
+scale = Vector2(3.2, 2.86667)
+texture = ExtResource("11_43bhp")
+region_enabled = true
+region_rect = Rect2(16, 16, 16, 16)
 
 [node name="GameOver" type="ColorRect" parent="UI"]
 visible = false

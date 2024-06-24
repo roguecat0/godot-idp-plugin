@@ -1,5 +1,5 @@
 vocabulary V {
-	type Unit := {13, 15, 19, 23, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38}
+	type Unit := {1, 3, 5, 7, 9, 11}
 	type Color := {Red, Blue, Green}
 	type Action := {Farm, Rest, Fight}
 	unitHealth : (Unit) -> Int
@@ -10,26 +10,20 @@ vocabulary V {
 	units : () -> Int
 	time : () -> Int
 	rule_0 : (Unit) -> Bool
-	rule_1 : (Unit) -> Bool
-	rule_2 : (Unit) -> Bool
 
 }
 theory T:V {
-	!u in Unit: rule_0(u) <=> true & unitColor(u) = Red.
-	!u in Unit: rule_1(u) <=> true & unitColor(u) = Blue.
-	!u in Unit: rule_2(u) <=> true & unitColor(u) = Green.
-	!u in Unit: unitAction(u) = Farm <= rule_0(u).
-	!u in Unit: unitAction(u) = Rest <= rule_1(u) & ~rule_0(u).
-	!u in Unit: unitAction(u) = Fight <= rule_2(u) & ~rule_0(u) & ~rule_1(u).
+	!u in Unit: rule_0(u) <=> true & unitAge(u) >= 0.
+	!u in Unit: unitAction(u) = Fight <= rule_0(u).
 
 }
 structure S:V {
-	unitHealth := {13 -> 10, 15 -> 10, 19 -> 51.5233390000014, 23 -> 10, 24 -> 43.398664000001, 25 -> 2.00559756666646, 27 -> 10, 28 -> 10, 29 -> 28.9992400000004, 30 -> 7.29983023333321, 31 -> 28.4742610000004, 32 -> 28.4742610000004, 33 -> 20.9245630000001, 34 -> 8.99767898333329, 35 -> 10, 36 -> 9.64556973333332, 37 -> 10, 38 -> 9.64556973333332}.
-	unitAge := {13 -> 29, 15 -> 29, 19 -> 29, 23 -> 24, 24 -> 24, 25 -> 24, 27 -> 19, 28 -> 19, 29 -> 14, 30 -> 14, 31 -> 14, 32 -> 14, 33 -> 9, 34 -> 9, 35 -> 9, 36 -> 4, 37 -> 4, 38 -> 4}.
-	unitColor := {13 -> Red, 15 -> Red, 19 -> Blue, 23 -> Red, 24 -> Blue, 25 -> Green, 27 -> Red, 28 -> Red, 29 -> Blue, 30 -> Green, 31 -> Blue, 32 -> Blue, 33 -> Blue, 34 -> Green, 35 -> Red, 36 -> Green, 37 -> Red, 38 -> Green}.
-	food := 30.
-	units := 18.
-	time := 29.
+	unitHealth := {1 -> 8.61999999999982, 3 -> 8.61999999999982, 5 -> 8.76666666666647, 7 -> 8.61999999999982, 9 -> 8.61999999999982, 11 -> 8.61999999999982}.
+	unitAge := {1 -> 4, 3 -> 4, 5 -> 4, 7 -> 4, 9 -> 4, 11 -> 4}.
+	unitColor := {1 -> Red, 3 -> Green, 5 -> Blue, 7 -> Red, 9 -> Green, 11 -> Blue}.
+	food := 10.
+	units := 6.
+	time := 4.
 
 }
 procedure main() {
